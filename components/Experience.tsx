@@ -262,7 +262,7 @@ const Experience = () => {
           <Link
             href="https://e39ruttpcb.ufs.sh/f/vRZwh4VYrDdRIlloCkaT754ALmJbotdRP1n2WChsz9ylX0rj"
             download="RajaAbuSalameh_CV.pdf"
-            className="inline-flex items-center justify-center px-6 py-3 bg-black text-white font-medium rounded-full hover:bg-gray-800 transition-all duration-300 ease-in-out leading-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 sm:focus:ring-offset-2"
+            className="inline-flex items-center justify-center px-6 h-12 bg-black text-white font-medium rounded-full hover:bg-gray-800 transition-all duration-300 ease-in-out leading-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 sm:focus:ring-offset-2"
             aria-label="Download Raja Abu Salameh's CV as PDF"
             rel="noopener noreferrer"
           >

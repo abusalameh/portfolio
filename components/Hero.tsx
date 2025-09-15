@@ -84,7 +84,7 @@ const Hero = () => {
 
           {/* Action Buttons */}
           <motion.div
-            className="flex flex-col sm:flex-row gap-4 justify-center items-center mt-8"
+            className="flex gap-4 justify-center items-center mt-8"
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.8 }}
@@ -94,7 +94,7 @@ const Hero = () => {
               download="RajaAbuSalameh_CV.pdf"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center justify-center px-6 py-3 border-2 border-gray-300 text-gray-700 font-medium rounded-full hover:border-gray-500 hover:text-gray-900 transition-all duration-300 ease-in-out leading-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+              className="inline-flex items-center justify-center px-6 h-12 border-2 border-gray-300 text-gray-700 font-medium rounded-full hover:border-gray-500 hover:text-gray-900 transition-all duration-300 ease-in-out leading-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
               aria-label="Download Raja Abu Salameh's CV as PDF"
             >
               <span className="leading-none">Download CV</span>
@@ -108,7 +108,7 @@ const Hero = () => {
                 }
               }}
               href="#services"
-              className="inline-flex items-center justify-center px-6 py-3 bg-black text-white font-medium rounded-full hover:bg-gray-800 transition-all duration-300 ease-in-out leading-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+              className="inline-flex items-center justify-center px-6 h-12 bg-black text-white font-medium rounded-full hover:bg-gray-800 transition-all duration-300 ease-in-out leading-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
               aria-label="Navigate to services section to explore my work"
             >
               <span className="leading-none">Explore My Work</span>

@@ -168,11 +168,23 @@ const Skills = () => {
     "Tools",
   ];
   const [selectedCategory, setSelectedCategory] = useState("All");
+  const [showAllSkills, setShowAllSkills] = useState(false);
 
   const filteredSkills =
     selectedCategory === "All"
       ? skillsData
       : skillsData.filter((skill) => skill.category === selectedCategory);
+
+  // For mobile, show only first 6 skills unless "Show More" is clicked
+  // For desktop, always show all skills
+  const skillsToShowMobile = showAllSkills ? filteredSkills : filteredSkills.slice(0, 6);
+  const skillsToShowDesktop = filteredSkills;
+  const hasMoreSkills = filteredSkills.length > 6;
+
+  // Reset showAllSkills when category changes
+  React.useEffect(() => {
+    setShowAllSkills(false);
+  }, [selectedCategory]);
 
   return (
     <section id="skills" className="relative py-24 sm:py-32 bg-white" aria-label="Technical Skills and Expertise">
@@ -249,17 +261,17 @@ const Skills = () => {
           </div>
         </motion.div>
 
-        {/* Skills Grid */}
+        {/* Skills Grid - Mobile */}
         <motion.div
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           transition={{ duration: 0.6, delay: 0.4 }}
           viewport={{ once: true }}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 mb-12 md:mb-16 px-4 md:px-0"
+          className="md:hidden grid grid-cols-2 sm:grid-cols-3 gap-2 sm:gap-4 mb-12 px-2"
           role="list"
-          aria-label={`${filteredSkills.length} skills in ${selectedCategory === 'All' ? 'all categories' : selectedCategory + ' category'}`}
+          aria-label={`${skillsToShowMobile.length} skills in ${selectedCategory === 'All' ? 'all categories' : selectedCategory + ' category'}`}
         >
-          {filteredSkills.map((skill, index) => (
+          {skillsToShowMobile.map((skill, index) => (
             <motion.div
               key={skill.name}
               initial={{ opacity: 0, y: 20 }}
@@ -268,24 +280,51 @@ const Skills = () => {
               viewport={{ once: true }}
               className="group"
               role="listitem"
-              aria-labelledby={`skill-${index}-name-mobile skill-${index}-name-desktop`}
-              aria-describedby={`skill-${index}-description-mobile skill-${index}-description-desktop`}
+              aria-labelledby={`skill-${index}-name-mobile`}
+              aria-describedby={`skill-${index}-description-mobile`}
             >
-              {/* Mobile: Card design */}
-              <div className="md:hidden bg-gray-50 rounded-lg p-4 hover:bg-gray-100 transition-colors duration-300 active:bg-gray-200">
-                <h3 className="text-lg font-semibold text-gray-900 mb-1" id={`skill-${index}-name-mobile`} role="heading" aria-level={3}>
-                  {skill.name}
-                </h3>
-                <p className="text-xs text-gray-500 mb-2 uppercase tracking-wide font-medium">
-                  {skill.category}
-                </p>
-                <p className="text-sm text-gray-600 leading-relaxed" id={`skill-${index}-description-mobile`}>
+              {/* Mobile: Desktop-style border design with responsive sizing */}
+              <div className="border-l-2 border-gray-200 pl-4 hover:border-gray-400 transition-colors duration-300 h-24 flex flex-col justify-between">
+                <div>
+                  <h3 className="text-base font-semibold text-gray-900 mb-1 group-hover:text-gray-700 transition-colors duration-300 leading-tight" id={`skill-${index}-name-mobile`} role="heading" aria-level={3}>
+                    {skill.name}
+                  </h3>
+                  <p className="text-xs text-gray-500 mb-1 uppercase tracking-wide font-medium">
+                    {skill.category}
+                  </p>
+                </div>
+                <p className="text-xs text-gray-600 leading-relaxed flex-1" id={`skill-${index}-description-mobile`}>
                   {skill.description}
                 </p>
               </div>
+            </motion.div>
+          ))}
+        </motion.div>
 
+        {/* Skills Grid - Desktop */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          transition={{ duration: 0.6, delay: 0.4 }}
+          viewport={{ once: true }}
+          className="hidden md:grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12 md:mb-16"
+          role="list"
+          aria-label={`${skillsToShowDesktop.length} skills in ${selectedCategory === 'All' ? 'all categories' : selectedCategory + ' category'}`}
+        >
+          {skillsToShowDesktop.map((skill, index) => (
+            <motion.div
+              key={skill.name}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: index * 0.1 }}
+              viewport={{ once: true }}
+              className="group"
+              role="listitem"
+              aria-labelledby={`skill-${index}-name-desktop`}
+              aria-describedby={`skill-${index}-description-desktop`}
+            >
               {/* Desktop: Border design */}
-              <div className="hidden md:block border-l-2 border-gray-200 pl-6 hover:border-gray-400 transition-colors duration-300">
+              <div className="border-l-2 border-gray-200 pl-6 hover:border-gray-400 transition-colors duration-300">
                 <h3 className="text-xl font-semibold text-gray-900 mb-2 group-hover:text-gray-700 transition-colors duration-300" id={`skill-${index}-name-desktop`} role="heading" aria-level={3}>
                   {skill.name}
                 </h3>
@@ -299,6 +338,25 @@ const Skills = () => {
             </motion.div>
           ))}
         </motion.div>
+
+        {/* Load More Button - Mobile Only */}
+        {!showAllSkills && hasMoreSkills && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+            className="md:hidden text-center mb-12"
+          >
+            <button
+              onClick={() => setShowAllSkills(true)}
+              className="px-6 py-3 bg-gray-900 text-white text-sm font-medium rounded-full hover:bg-gray-800 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 active:bg-gray-700"
+              aria-label={`Show ${filteredSkills.length - 6} more skills`}
+            >
+              Load More ({filteredSkills.length - 6} more)
+            </button>
+          </motion.div>
+        )}
 
         {/* Skills Summary */}
         <motion.div
