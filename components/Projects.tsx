@@ -36,28 +36,28 @@ const projects: Project[] = [
     role: "Frontend Developer",
   },
   {
-    id: "8",
-    title: "SalmaSoft Store Builder",
-    description:
-      "Arabic-first ecommerce platform for launching an online store in minutes, with local payment methods, free SSL, and zero sales commission, built for the Palestinian market.",
-    technologies: ["Next.js", "TailwindCSS", "Supabase"],
-    url: "https://salmasoft.com",
-    category: "Full Stack",
-    image: "/images/salmasoft.jpg",
-    year: "2026",
-    role: "Full-Stack Developer",
-  },
-  {
     id: "9",
-    title: "Uqhoan Gifts & Beauty Store",
+    title: "Uqhoan Handcrafted Gifts",
     description:
-      "Gifts and beauty ecommerce storefront for special occasions, with curated bouquets and gift sets in a clean, fast Arabic shopping experience.",
+      "Ecommerce storefront for handcrafted gifts — weddings, celebrations, newborns, and special occasions — with a clean, fast Arabic shopping experience.",
     technologies: ["Next.js", "TailwindCSS", "Supabase"],
     url: "https://uqhoan.com",
     category: "Frontend",
     image: "/images/uqhoan.jpg",
     year: "2026",
     role: "Frontend Developer",
+  },
+  {
+    id: "8",
+    title: "SalmaSoft Store Builder",
+    description:
+      "Ecommerce platform that lets anyone create and launch their own digital store in minutes — Arabic-first, with local payment methods, free SSL, and zero sales commission.",
+    technologies: ["Next.js", "TailwindCSS", "Supabase"],
+    url: "https://salmasoft.com",
+    category: "Full Stack",
+    image: "/images/salmasoft.jpg",
+    year: "2026",
+    role: "Full-Stack Developer",
   },
   {
     id: "1",
@@ -152,17 +152,21 @@ const BrowserFrame = ({
   project,
   priority,
   hideOverlay,
+  fitViewport,
 }: {
   project: Project;
   priority?: boolean;
   hideOverlay?: boolean;
+  // On desktop, cap the image to a viewport-relative height so the sticky
+  // preview (image + description + tech) always fits without scrolling.
+  fitViewport?: boolean;
 }) => (
   <a
     href={project.url}
     target="_blank"
     rel="noopener noreferrer"
     className="group block overflow-hidden rounded-xl border border-border bg-card shadow-sm transition-shadow duration-300 hover:shadow-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-    aria-label={`Visit ${project.title} live site, opens in a new tab`}
+    aria-label={`${project.title}, ${hostname(project.url)} — visit live site, opens in a new tab`}
   >
     <div className="flex items-center gap-2 border-b border-border bg-muted px-4 py-2.5">
       <span className="flex gap-1.5" aria-hidden="true">
@@ -170,11 +174,18 @@ const BrowserFrame = ({
         <span className="h-2.5 w-2.5 rounded-full bg-muted-foreground/30" />
         <span className="h-2.5 w-2.5 rounded-full bg-muted-foreground/30" />
       </span>
-      <span className="mx-auto max-w-[60%] truncate rounded-md bg-background px-3 py-1 font-mono text-[11px] text-muted-foreground">
+      <span
+        className="mx-auto max-w-[60%] truncate rounded-md bg-background px-3 py-1 font-mono text-[11px] text-muted-foreground"
+        aria-hidden="true"
+      >
         {hostname(project.url)}
       </span>
     </div>
-    <div className="relative aspect-[16/10] overflow-hidden bg-muted">
+    <div
+      className={`relative aspect-[16/10] overflow-hidden bg-muted ${
+        fitViewport ? "lg:aspect-auto lg:h-[40vh]" : ""
+      }`}
+    >
       <Image
         src={project.image}
         alt={`Screenshot of ${project.title}`}
@@ -301,7 +312,7 @@ const Projects = () => {
               }}
               className={`cursor-pointer rounded-full border px-4 py-2 text-sm font-medium transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background ${
                 active === f
-                  ? "border-foreground bg-foreground text-background"
+                  ? "border-accent bg-accent text-background"
                   : "border-border text-muted-foreground hover:border-accent/50 hover:text-foreground"
               }`}
               aria-pressed={active === f}
@@ -377,6 +388,7 @@ const Projects = () => {
                       project={current}
                       priority
                       hideOverlay={!reduce}
+                      fitViewport
                     />
                   </div>
                   <div className="mt-6">
@@ -458,12 +470,17 @@ const Projects = () => {
                 }
                 aria-label={`Show ${p.title}`}
                 aria-current={i === mobileActive}
-                className={`h-1.5 cursor-pointer rounded-full transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background ${
-                  i === mobileActive
-                    ? "w-6 bg-accent"
-                    : "w-1.5 bg-border hover:bg-muted-foreground"
-                }`}
-              />
+                className="group flex h-6 min-w-6 cursor-pointer items-center justify-center rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+              >
+                <span
+                  aria-hidden="true"
+                  className={`block h-1.5 rounded-full transition-all duration-300 ${
+                    i === mobileActive
+                      ? "w-6 bg-accent"
+                      : "w-1.5 bg-border group-hover:bg-muted-foreground"
+                  }`}
+                />
+              </button>
             ))}
           </div>
         </div>

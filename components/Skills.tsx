@@ -181,7 +181,12 @@ const Skills = () => {
                         duration: 0.35,
                         delay: Math.min(index * 0.04, 0.3),
                       }}
-                      className="group flex items-center gap-2.5 rounded-full border border-border bg-card py-2 pl-2 pr-4 transition-all duration-200 hover:-translate-y-0.5 hover:border-accent/50"
+                      whileHover={
+                        reduce
+                          ? undefined
+                          : { y: -2, transition: { duration: 0.15, ease: "easeOut" } }
+                      }
+                      className="group flex items-center gap-2.5 rounded-full border border-border bg-card py-2 pl-2 pr-4 transition-colors duration-200 hover:border-accent/50"
                     >
                       <span className="flex h-7 w-7 items-center justify-center rounded-full bg-white ring-1 ring-border/60">
                         <Logo skill={skill} />

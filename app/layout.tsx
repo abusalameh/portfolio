@@ -1,8 +1,9 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { PostHogProvider } from "@/components/Providers";
 import ThemeScript from "../components/ThemeScript";
+import CursorLight from "../components/CursorLight";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -85,6 +86,46 @@ export const metadata: Metadata = {
   },
 };
 
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#f0f8ff" },
+    { media: "(prefers-color-scheme: dark)", color: "#14181e" },
+  ],
+};
+
+// Structured data for richer search results.
+const personJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  name: "Raja Abu Salameh",
+  url: "https://abusalameh.dev",
+  image: "https://abusalameh.dev/me.jpg",
+  jobTitle: "Full Stack Developer",
+  description:
+    "Full Stack Developer specializing in React, Vue, Next.js, and Laravel.",
+  address: {
+    "@type": "PostalAddress",
+    addressLocality: "Jenin",
+    addressCountry: "PS",
+  },
+  sameAs: [
+    "https://linkedin.com/in/raja-salameh",
+    "https://github.com/abusalameh",
+  ],
+  knowsAbout: [
+    "React",
+    "Next.js",
+    "Vue.js",
+    "Laravel",
+    "TypeScript",
+    "Node.js",
+    "Performance Optimization",
+    "SEO",
+  ],
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -93,13 +134,18 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
         <ThemeScript />
+        <script
+          type="application/ld+json"
+          // eslint-disable-next-line react/no-danger
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}
+        />
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} font-sans antialiased bg-background text-foreground`}
       >
+        <CursorLight />
         <PostHogProvider>{children}</PostHogProvider>
       </body>
     </html>

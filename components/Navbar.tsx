@@ -112,7 +112,7 @@ const Navbar = () => {
         {/* Desktop nav */}
         <ul className="relative hidden items-center lg:flex">
           <motion.span
-            className="absolute h-9 rounded-full bg-muted"
+            className="absolute h-9 rounded-full bg-muted dark:bg-white/10"
             aria-hidden="true"
             animate={{ left: indicatorStyle.left, width: indicatorStyle.width }}
             transition={{ type: "spring", stiffness: 320, damping: 32 }}
@@ -201,8 +201,8 @@ const Navbar = () => {
                         aria-current={isActive ? "page" : undefined}
                         className={`group flex items-center gap-4 rounded-2xl px-4 py-3.5 transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background ${
                           isActive
-                            ? "bg-muted text-foreground"
-                            : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                            ? "bg-muted text-foreground dark:bg-white/10"
+                            : "text-muted-foreground hover:bg-muted hover:text-foreground dark:hover:bg-white/5"
                         }`}
                       >
                         <span

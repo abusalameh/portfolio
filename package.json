@@ -25,6 +25,9 @@
     "tailwind-merge": "^3.3.1",
     "tailwindcss-animate": "^1.0.7"
   },
+  "browserslist": [
+    "supports es6-module and not dead"
+  ],
   "devDependencies": {
     "@biomejs/biome": "2.2.0",
     "@tailwindcss/postcss": "^4",

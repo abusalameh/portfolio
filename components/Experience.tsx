@@ -142,55 +142,73 @@ const Experience = () => {
   return (
     <section
       id="experience"
-      className="bg-muted py-24 sm:py-32"
+      className="relative overflow-hidden bg-muted py-24 sm:py-32"
       ref={ref}
       aria-label="Professional experience"
     >
-      <div className="mx-auto max-w-6xl px-5 sm:px-8">
+      {/* warm accent glow, matching the hero treatment */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 opacity-70 [background:radial-gradient(48rem_32rem_at_12%_-6%,var(--accent-soft),transparent_58%)]"
+      />
+
+      <div className="relative mx-auto max-w-6xl px-5 sm:px-8">
         <motion.div
-          className="max-w-2xl"
+          className="max-w-3xl"
           initial={reduce ? false : { opacity: 0, y: 24 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6 }}
         >
+          {/* eyebrow */}
+          <span className="inline-flex items-center gap-3 font-mono text-xs uppercase tracking-[0.18em] text-muted-foreground">
+            <span className="h-px w-8 bg-accent" aria-hidden="true" />
+            Experience
+          </span>
+
           <h2
-            className="text-3xl font-semibold tracking-tight text-foreground sm:text-4xl"
+            className="mt-6 text-balance text-4xl font-semibold leading-[1.05] tracking-tight text-foreground sm:text-5xl lg:text-[3.75rem]"
             role="heading"
             aria-level={2}
           >
-            Eight years, shipping for real teams
+            <span className="text-accent">Eight years</span> shipping for real
+            teams.
           </h2>
-          <p className="mt-4 text-lg leading-relaxed text-muted-foreground">
-            From startups and enterprise clients to running my own product,
+          <p className="mt-5 max-w-xl text-lg leading-relaxed text-muted-foreground">
+            From startups and enterprise clients to running my own product —
             building and leading work that ships to production.
           </p>
         </motion.div>
 
         {/* Quick stats */}
         <motion.dl
-          className="mt-10 grid grid-cols-3 gap-4 border-y border-border py-6"
+          className="mt-12 grid grid-cols-3 overflow-hidden rounded-2xl border border-border bg-card/40"
           initial={reduce ? false : { opacity: 0, y: 24 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6, delay: 0.1 }}
         >
-          {stats.map((s) => (
-            <div key={s.label}>
+          {stats.map((s, i) => (
+            <div
+              key={s.label}
+              className={`px-5 py-6 sm:px-7 sm:py-7 ${
+                i > 0 ? "border-l border-border" : ""
+              }`}
+            >
               <dd
-                className={`text-3xl font-semibold tracking-tight sm:text-4xl ${
+                className={`text-4xl font-semibold tracking-tight sm:text-5xl ${
                   s.accent ? "text-accent" : "text-foreground"
                 }`}
               >
                 {s.value}
               </dd>
-              <dt className="mt-1 text-xs text-muted-foreground sm:text-sm">
+              <dt className="mt-2 text-xs text-muted-foreground sm:text-sm">
                 {s.label}
               </dt>
             </div>
           ))}
         </motion.dl>
 
-        {/* Scannable role list */}
-        <ol className="mt-8" role="list">
+        {/* Career timeline */}
+        <ol className="relative mt-14 space-y-8" role="list">
           {roles.map((item, index) => (
             <motion.li
               key={`${item.company}-${item.period}`}
@@ -201,12 +219,24 @@ const Experience = () => {
                 delay: 0.15 + index * 0.05,
                 ease: [0.16, 1, 0.3, 1],
               }}
-              className="group flex gap-4 rounded-2xl border border-transparent p-4 transition-colors duration-200 hover:border-border hover:bg-background sm:gap-5"
+              className="group relative flex gap-5 sm:gap-6"
             >
-              {/* company logo (monogram fallback) */}
-              <LogoBadge item={item} />
+              {/* connecting rail to the next node (skipped on the last item) */}
+              {index < roles.length - 1 && (
+                <span
+                  aria-hidden="true"
+                  className={`absolute left-7 top-7 -z-0 h-[calc(100%+2rem)] w-px -translate-x-1/2 ${
+                    item.current ? "bg-accent/40" : "bg-border"
+                  }`}
+                />
+              )}
 
-              <div className="min-w-0 flex-1">
+              {/* company logo node, sits on the rail */}
+              <div className="relative z-10">
+                <LogoBadge item={item} />
+              </div>
+
+              <div className="min-w-0 flex-1 pt-0.5 transition-transform duration-200 group-hover:translate-x-0.5">
                 <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-0.5">
                   <h3
                     className="text-base font-semibold tracking-tight text-foreground transition-colors duration-200 group-hover:text-accent sm:text-lg"
@@ -234,7 +264,7 @@ const Experience = () => {
                   {item.tags.map((tag) => (
                     <span
                       key={tag}
-                      className="rounded-full border border-border px-2.5 py-0.5 font-mono text-[11px] text-muted-foreground"
+                      className="rounded-full border border-border px-2.5 py-0.5 font-mono text-[11px] text-muted-foreground transition-colors duration-200 group-hover:border-accent/40"
                     >
                       {tag}
                     </span>
