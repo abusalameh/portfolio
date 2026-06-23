@@ -1,123 +1,133 @@
-"use client";
-
-import Image from "next/image";
-import { motion } from "framer-motion";
-import Particles from "./Particles";
-import BlurText from "./BlurText";
 import Link from "next/link";
+import { ArrowRight, ArrowDown } from "@phosphor-icons/react/dist/ssr";
+
+const words = ["I", "build", "web", "apps", "that"];
+
+const shots = [
+  "/images/salmasoft.jpg",
+  "/images/yallabites.jpg",
+  "/images/uqhoan.jpg",
+  "/images/do-studio.jpg",
+  "/images/royal-canin.jpg",
+  "/images/quiz-plus.jpg",
+  "/images/safarway.jpg",
+  "/images/one-stop-parking.jpg",
+  "/images/werner-electric.jpg",
+];
 
 const Hero = () => {
   return (
     <section
       id="hero"
-      className="relative min-h-screen flex items-center justify-center bg-white px-4 sm:px-6 lg:px-8 overflow-hidden"
-      aria-label="Hero section - Introduction"
+      className="relative flex min-h-[100dvh] flex-col overflow-hidden bg-background pt-28 pb-10"
+      aria-label="Introduction"
     >
-      <Particles count={30} color="rgba(59, 130, 246, 0.08)" />
-      <div className="max-w-7xl mx-auto text-center">
-        {/* Profile Image */}
-        <motion.div
-          className="mb-8"
-          initial={{ opacity: 0, scale: 0.5 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.6, ease: "easeOut" }}
-        >
-          <div className="relative w-48 h-48 mx-auto mb-6 rounded-full  bg-gray-800 flex items-center justify-center">
-            <Image
-              src="/me.jpg"
-              alt="Professional headshot of Raja Abu Salameh, Senior Software Engineer"
-              width={400}
-              height={400}
-              className="rounded-full object-cover w-44 h-44"
-              priority
-            />
+      {/* warm accent glow via cheap radial-gradient (no blur filter = no jank) */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 opacity-80 [background:radial-gradient(55rem_40rem_at_78%_-8%,var(--accent-soft),transparent_55%)]"
+      />
+
+      <div className="relative flex flex-1 items-center px-5 sm:px-8">
+        <div className="mx-auto w-full max-w-5xl">
+          {/* availability */}
+          <div className="hero-rise" style={{ animationDelay: "0s" }}>
+            <span className="inline-flex items-center gap-2 rounded-full border border-border bg-card/60 px-3 py-1.5 font-mono text-xs uppercase tracking-[0.18em] text-muted-foreground backdrop-blur-sm">
+              <span className="relative flex h-2 w-2" aria-hidden="true">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent opacity-75 motion-reduce:animate-none" />
+                <span className="relative inline-flex h-2 w-2 rounded-full bg-accent" />
+              </span>
+              Available for new work
+            </span>
           </div>
-        </motion.div>
 
-        {/* Main Content */}
-        <div className="space-y-6">
-          <motion.h1
-            className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 text-center flex justify-center items-center"
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            role="heading"
-            aria-level={1}
-          >
-            <BlurText
-              text="Raja Abu Salameh"
-              delay={150}
-              animateBy="words"
-              direction="top"
-              onAnimationComplete={() => console.log("Animation complete")}
-              className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 text-center"
-            />
-          </motion.h1>
-          <motion.p
-            className="text-xl sm:text-2xl text-gray-600 font-medium flex items-center justify-center"
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
-          >
-            <BlurText
-              text="Senior Software Engineer"
-              delay={500}
-              animateBy="words"
-              direction="top"
-              onAnimationComplete={() => console.log("Animation complete")}
-              className="text-gray-600"
-            />
-          </motion.p>
+          {/* kinetic headline — pure CSS per-word stagger */}
+          <h1 className="mt-8 max-w-4xl text-balance text-5xl font-semibold leading-[1.03] tracking-tight text-foreground sm:text-6xl lg:text-[5.5rem]">
+            {words.map((w, i) => (
+              <span
+                key={i}
+                className="hero-word mr-[0.25em]"
+                style={{ animationDelay: `${0.05 + i * 0.045}s` }}
+              >
+                {w}
+              </span>
+            ))}
+            <span
+              className="hero-word text-accent"
+              style={{ animationDelay: `${0.05 + words.length * 0.045}s` }}
+            >
+              perform.
+            </span>
+          </h1>
 
-          <motion.p
-            className="text-lg text-gray-500 max-w-2xl mx-auto leading-relaxed"
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.6 }}
+          {/* identity + value */}
+          <p
+            className="hero-rise mt-8 max-w-xl text-lg leading-relaxed text-muted-foreground"
+            style={{ animationDelay: "0.4s" }}
           >
-            Experienced Senior Software Engineer with 8+ years in full-stack
-            development. Specialized in creating high-performance web
-            applications using modern technologies like React, Vue, Laravel, and
-            Node.js. Proven track record of delivering scalable solutions that
-            improve user experience and drive business growth.
-          </motion.p>
+            <span className="font-medium text-foreground">
+              Raja Abu Salameh
+            </span>
+            , founder and senior engineer. 8+ years across React, Vue, Next.js,
+            and Laravel.
+          </p>
 
-          {/* Action Buttons */}
-          <motion.div
-            className="flex gap-4 justify-center items-center mt-8"
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.8 }}
+          {/* CTAs */}
+          <div
+            className="hero-rise mt-10 flex flex-wrap items-center gap-3"
+            style={{ animationDelay: "0.5s" }}
           >
+            <Link
+              href="#projects"
+              className="group inline-flex h-12 items-center justify-center gap-2 rounded-full bg-foreground px-7 text-sm font-medium text-background transition-transform duration-200 hover:-translate-y-0.5 active:translate-y-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+              aria-label="View featured work"
+            >
+              View work
+              <ArrowRight
+                size={17}
+                weight="bold"
+                className="transition-transform duration-200 group-hover:translate-x-0.5"
+                aria-hidden="true"
+              />
+            </Link>
             <Link
               href="https://e39ruttpcb.ufs.sh/f/vRZwh4VYrDdRIlloCkaT754ALmJbotdRP1n2WChsz9ylX0rj"
               download="RajaAbuSalameh_CV.pdf"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center justify-center px-6 h-12 border-2 border-gray-300 text-gray-700 font-medium rounded-full hover:border-gray-500 hover:text-gray-900 transition-all duration-300 ease-in-out leading-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-              aria-label="Download Raja Abu Salameh's CV as PDF"
+              className="inline-flex h-12 items-center justify-center gap-2 rounded-full border border-border px-7 text-sm font-medium text-foreground transition-colors duration-200 hover:border-accent hover:text-accent focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+              aria-label="Download CV as PDF"
             >
-              <span className="leading-none">Download CV</span>
+              <ArrowDown size={17} weight="bold" aria-hidden="true" />
+              Download CV
             </Link>
-            <Link
-              onClick={(e) => {
-                e.preventDefault();
-                const services = document.getElementById("services");
-                if (services) {
-                  services.scrollIntoView({ behavior: "smooth" });
-                }
-              }}
-              href="#services"
-              className="inline-flex items-center justify-center px-6 h-12 bg-black text-white font-medium rounded-full hover:bg-gray-800 transition-all duration-300 ease-in-out leading-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-              aria-label="Navigate to services section to explore my work"
-            >
-              <span className="leading-none">Explore My Work</span>
-            </Link>
-          </motion.div>
+          </div>
         </div>
       </div>
-      {/* Soft gradient overlay at bottom */}
-      <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-gray-50/80 to-transparent pointer-events-none" />
+
+      {/* live project marquee — real work, subtle motion */}
+      <div
+        className="hero-rise group relative mt-12 w-full overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_6%,black_94%,transparent)] sm:mt-20"
+        style={{ animationDelay: "0.55s" }}
+        aria-hidden="true"
+      >
+        <div className="flex w-max animate-marquee gap-4 group-hover:[animation-play-state:paused]">
+          {[...shots, ...shots].map((src, i) => (
+            <div
+              key={i}
+              className="aspect-[16/10] w-56 flex-shrink-0 overflow-hidden rounded-xl border border-border bg-card sm:w-72"
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={src}
+                alt=""
+                loading="lazy"
+                className="h-full w-full object-cover object-top"
+              />
+            </div>
+          ))}
+        </div>
+      </div>
     </section>
   );
 };

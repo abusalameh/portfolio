@@ -1,393 +1,221 @@
 "use client";
 
-import React, { useState } from "react";
-import { motion } from "framer-motion";
+import { useState } from "react";
+import { motion, useReducedMotion } from "motion/react";
+import { CaretDown } from "@phosphor-icons/react";
+
+interface Skill {
+  name: string;
+  slug: string; // Simple Icons slug; empty string => use logoUrl or monogram
+  logoUrl?: string; // custom logo (takes precedence over slug)
+  trending?: boolean;
+}
+
+// Within each group: trending tech first, older tech after (so "Show more" appends cleanly).
+const groups: { category: string; skills: Skill[] }[] = [
+  {
+    category: "Frontend",
+    skills: [
+      { name: "React", slug: "react", trending: true },
+      { name: "Next.js", slug: "nextdotjs", trending: true },
+      { name: "Vue.js", slug: "vuedotjs", trending: true },
+      { name: "Nuxt.js", slug: "nuxtdotjs", trending: true },
+      { name: "TypeScript", slug: "typescript", trending: true },
+      { name: "JavaScript", slug: "javascript", trending: true },
+      { name: "Tailwind CSS", slug: "tailwindcss", trending: true },
+      { name: "Angular", slug: "angular" },
+      { name: "SCSS", slug: "sass" },
+      { name: "Bootstrap", slug: "bootstrap" },
+      { name: "Styled Components", slug: "styledcomponents" },
+      { name: "jQuery", slug: "jquery" },
+    ],
+  },
+  {
+    category: "Backend",
+    skills: [
+      { name: "Node.js", slug: "nodedotjs", trending: true },
+      { name: "Laravel", slug: "laravel", trending: true },
+      { name: "Express", slug: "express", trending: true },
+      { name: "PHP", slug: "php" },
+      { name: "Yii", slug: "" },
+    ],
+  },
+  {
+    category: "Database",
+    skills: [
+      { name: "PostgreSQL", slug: "postgresql", trending: true },
+      { name: "Supabase", slug: "supabase", trending: true },
+      { name: "Prisma", slug: "prisma", trending: true },
+      { name: "Drizzle", slug: "drizzle", trending: true },
+      { name: "Redis", slug: "redis", trending: true },
+      { name: "MySQL", slug: "mysql" },
+      { name: "SQL Server", slug: "" },
+    ],
+  },
+  {
+    category: "DevOps & Tools",
+    skills: [
+      { name: "Docker", slug: "docker", trending: true },
+      { name: "Vercel", slug: "vercel", trending: true },
+      { name: "GitHub", slug: "github", trending: true },
+      { name: "Git", slug: "git", trending: true },
+      { name: "Figma", slug: "figma", trending: true },
+      { name: "Jenkins", slug: "jenkins" },
+      { name: "Jira", slug: "jira" },
+      { name: "Confluence", slug: "confluence" },
+    ],
+  },
+  {
+    category: "AI Tools",
+    skills: [
+      { name: "Claude", slug: "claude", trending: true },
+      { name: "Cursor", slug: "cursor", trending: true },
+      { name: "GitHub Copilot", slug: "githubcopilot", trending: true },
+      { name: "v0", slug: "v0", trending: true },
+      { name: "Ollama", slug: "ollama", trending: true },
+      { name: "Trae", slug: "", logoUrl: "/images/logos/trae.png", trending: true },
+    ],
+  },
+  {
+    category: "Operating Systems",
+    skills: [
+      { name: "macOS", slug: "apple", trending: true },
+      { name: "Ubuntu", slug: "ubuntu", trending: true },
+      { name: "Linux", slug: "linux", trending: true },
+    ],
+  },
+];
+
+const olderCount = groups.reduce(
+  (n, g) => n + g.skills.filter((s) => !s.trending).length,
+  0
+);
+
+const Logo = ({ skill }: { skill: Skill }) => {
+  const [failed, setFailed] = useState(false);
+  const src =
+    skill.logoUrl ??
+    (skill.slug ? `https://cdn.simpleicons.org/${skill.slug}` : "");
+  if (!src || failed) {
+    return (
+      <span className="flex h-5 w-5 items-center justify-center rounded bg-foreground text-[10px] font-bold text-background">
+        {skill.name.charAt(0)}
+      </span>
+    );
+  }
+  return (
+    // Brand logos on a constant light tile so dark/monochrome marks stay visible in both themes.
+    // eslint-disable-next-line @next/next/no-img-element
+    <img
+      src={src}
+      alt=""
+      width={20}
+      height={20}
+      loading="lazy"
+      className="h-5 w-5 object-contain"
+      onError={() => setFailed(true)}
+      aria-hidden="true"
+    />
+  );
+};
 
 const Skills = () => {
-  const skillsData = [
-    {
-      name: "React",
-      category: "Frontend",
-      description: "Component-based UI library",
-    },
-    {
-      name: "Next.js",
-      category: "Frontend",
-      description: "Full-stack React framework",
-    },
-    {
-      name: "Vue.js",
-      category: "Frontend",
-      description: " Progressive JavaScript framework",
-    },
-    {
-      name: "Angular",
-      category: "Frontend",
-      description: "TypeScript-based web application framework",
-    },
-    {
-      name: "Nuxt.js",
-      category: "Frontend",
-      description: "Vue.js framework for server-side rendering",
-    },
-    {
-      name: "TypeScript",
-      category: "Frontend",
-      description: "Typed JavaScript superset",
-    },
-    {
-      name: "JavaScript",
-      category: "Frontend",
-      description: "Dynamic programming language",
-    },
-    {
-      name: "Tailwind CSS",
-      category: "Frontend",
-      description: "Utility-first CSS framework",
-    },
-    {
-      name: "Laravel",
-      category: "Backend",
-      description: "Elegant PHP framework",
-    },
-    {
-      name: "PHP",
-      category: "Backend",
-      description: "Server-side scripting language",
-    },
-    {
-      name: "Yii Framework",
-      category: "Backend",
-      description: "High-performance PHP framework",
-    },
-    {
-      name: "Bootstrap",
-      category: "Frontend",
-      description: "Front-end web development framework",
-    },
-    { name: "jQuery", category: "Frontend", description: "JavaScript library" },
-    { name: "Bulma", category: "Frontend", description: "CSS framework" },
-    { name: "SCSS", category: "Frontend", description: "CSS preprocessor" },
-    { name: "CSS", category: "Frontend", description: "Style sheet language" },
-    { name: "HTML", category: "Frontend", description: "Markup language" },
-    {
-      name: "Styled Components",
-      category: "Frontend",
-      description: "CSS-in-JS library",
-    },
-    {
-      name: "Figma",
-      category: "Tools",
-      description: "UI design tool",
-    },
-
-    {
-      name: "Node.js",
-      category: "Backend",
-      description: "JavaScript runtime environment",
-    },
-
-    {
-      name: "MySQL",
-      category: "Database",
-      description: "Relational database system",
-    },
-    {
-      name: "Microsoft SQL Server",
-      category: "Database",
-      description: "Relational database system",
-    },
-    {
-      name: "PostgreSQL",
-      category: "Database",
-      description: "Relational database system",
-    },
-    {
-      name: "Drizzle ORM",
-      category: "Database",
-      description: "TypeScript ORM for database interaction",
-    },
-    {
-      name: "Prisma ORM",
-      category: "Database",
-      description: "TypeScript ORM for database interaction",
-    },
-    {
-      name: "Docker",
-      category: "DevOps",
-      description: "Containerization platform",
-    },
-    {
-      name: "GitHub",
-      category: "Tools",
-      description: "Version control system",
-    },
-    {
-      name: "Jenkins",
-      category: "DevOps",
-      description: "CI/CD automation server",
-    },
-    {
-      name: "Vercel",
-      category: "DevOps",
-      description: "Serverless platform for frontend applications",
-    },
-    {
-      name: "JIRA",
-      category: "Tools",
-      description: "Project management and issue tracking tool",
-    },
-    {
-      name: "Confluence",
-      category: "Tools",
-      description: "Collaboration and documentation platform",
-    },
-    {
-      name: "Git",
-      category: "Tools",
-      description: "Version control system",
-    },
-    {
-      name: "Cursor",
-      category: "Tools",
-      description: "AI-powered Code editor and IDE",
-    },
-    {
-      name: "Trae",
-      category: "Tools",
-      description: "AI-powered Code editor and IDE",
-    },
-  ];
-
-  const categories = [
-    "All",
-    "Frontend",
-    "Backend",
-    "Database",
-    "DevOps",
-    "Tools",
-  ];
-  const [selectedCategory, setSelectedCategory] = useState("All");
-  const [showAllSkills, setShowAllSkills] = useState(false);
-
-  const filteredSkills =
-    selectedCategory === "All"
-      ? skillsData
-      : skillsData.filter((skill) => skill.category === selectedCategory);
-
-  // For mobile, show only first 6 skills unless "Show More" is clicked
-  // For desktop, always show all skills
-  const skillsToShowMobile = showAllSkills ? filteredSkills : filteredSkills.slice(0, 6);
-  const skillsToShowDesktop = filteredSkills;
-  const hasMoreSkills = filteredSkills.length > 6;
-
-  // Reset showAllSkills when category changes
-  React.useEffect(() => {
-    setShowAllSkills(false);
-  }, [selectedCategory]);
+  const reduce = useReducedMotion();
+  const [showAll, setShowAll] = useState(false);
 
   return (
-    <section id="skills" className="relative py-24 sm:py-32 bg-white" aria-label="Technical Skills and Expertise">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section
+      id="skills"
+      className="bg-background py-24 sm:py-32"
+      aria-label="Technical skills"
+    >
+      <div className="mx-auto max-w-6xl px-5 sm:px-8">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          className="mb-14 max-w-2xl"
+          initial={reduce ? false : { opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          viewport={{ once: true }}
-          className="text-center mb-12 md:mb-16"
         >
-          <p className="text-blue-600 text-sm mb-2 uppercase tracking-wide font-semibold">
-            Skills
-          </p>
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-3 md:mb-4" role="heading" aria-level={2}>
-            Technical Expertise
-          </h2>
-          <p className="text-gray-600 max-w-2xl mx-auto">
-            Technologies and tools I work with to create exceptional digital
-            solutions.
-          </p>
-        </motion.div>
-
-        {/* Category Filter */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-          viewport={{ once: true }}
-          className="mb-8 md:mb-12"
-          role="group"
-          aria-label="Filter skills by category"
-        >
-          {/* Mobile: Horizontal scroll */}
-          <div className="md:hidden overflow-x-auto pb-2">
-            <div className="flex gap-2 px-4 min-w-max">
-              {categories.map((category) => (
-                <button
-                  key={category}
-                  onClick={() => setSelectedCategory(category)}
-                  className={`px-4 py-2 text-sm font-medium transition-all duration-300 border rounded-full whitespace-nowrap cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
-                    selectedCategory === category
-                      ? "bg-gray-900 text-white border-gray-900"
-                      : "bg-white text-gray-600 hover:text-gray-900 border-gray-200 hover:border-gray-300"
-                  }`}
-                  aria-label={`Filter skills by ${category}`}
-                  aria-pressed={selectedCategory === category}
-                  type="button"
-                >
-                  {category}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Desktop: Centered wrap */}
-          <div className="hidden md:flex flex-wrap justify-center gap-2">
-            {categories.map((category) => (
-              <button
-                key={category}
-                onClick={() => setSelectedCategory(category)}
-                className={`px-4 py-2 text-sm font-medium transition-all duration-300 border rounded-full cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
-                  selectedCategory === category
-                    ? "bg-gray-900 text-white border-gray-900"
-                    : "bg-white text-gray-600 hover:text-gray-900 border-gray-200 hover:border-gray-300"
-                }`}
-                aria-label={`Filter skills by ${category}`}
-                aria-pressed={selectedCategory === category}
-                type="button"
-              >
-                {category}
-              </button>
-            ))}
-          </div>
-        </motion.div>
-
-        {/* Skills Grid - Mobile */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          transition={{ duration: 0.6, delay: 0.4 }}
-          viewport={{ once: true }}
-          className="md:hidden grid grid-cols-2 sm:grid-cols-3 gap-2 sm:gap-4 mb-12 px-2"
-          role="list"
-          aria-label={`${skillsToShowMobile.length} skills in ${selectedCategory === 'All' ? 'all categories' : selectedCategory + ' category'}`}
-        >
-          {skillsToShowMobile.map((skill, index) => (
-            <motion.div
-              key={skill.name}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: index * 0.1 }}
-              viewport={{ once: true }}
-              className="group"
-              role="listitem"
-              aria-labelledby={`skill-${index}-name-mobile`}
-              aria-describedby={`skill-${index}-description-mobile`}
-            >
-              {/* Mobile: Desktop-style border design with responsive sizing */}
-              <div className="border-l-2 border-gray-200 pl-4 hover:border-gray-400 transition-colors duration-300 h-24 flex flex-col justify-between">
-                <div>
-                  <h3 className="text-base font-semibold text-gray-900 mb-1 group-hover:text-gray-700 transition-colors duration-300 leading-tight" id={`skill-${index}-name-mobile`} role="heading" aria-level={3}>
-                    {skill.name}
-                  </h3>
-                  <p className="text-xs text-gray-500 mb-1 uppercase tracking-wide font-medium">
-                    {skill.category}
-                  </p>
-                </div>
-                <p className="text-xs text-gray-600 leading-relaxed flex-1" id={`skill-${index}-description-mobile`}>
-                  {skill.description}
-                </p>
-              </div>
-            </motion.div>
-          ))}
-        </motion.div>
-
-        {/* Skills Grid - Desktop */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          transition={{ duration: 0.6, delay: 0.4 }}
-          viewport={{ once: true }}
-          className="hidden md:grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12 md:mb-16"
-          role="list"
-          aria-label={`${skillsToShowDesktop.length} skills in ${selectedCategory === 'All' ? 'all categories' : selectedCategory + ' category'}`}
-        >
-          {skillsToShowDesktop.map((skill, index) => (
-            <motion.div
-              key={skill.name}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: index * 0.1 }}
-              viewport={{ once: true }}
-              className="group"
-              role="listitem"
-              aria-labelledby={`skill-${index}-name-desktop`}
-              aria-describedby={`skill-${index}-description-desktop`}
-            >
-              {/* Desktop: Border design */}
-              <div className="border-l-2 border-gray-200 pl-6 hover:border-gray-400 transition-colors duration-300">
-                <h3 className="text-xl font-semibold text-gray-900 mb-2 group-hover:text-gray-700 transition-colors duration-300" id={`skill-${index}-name-desktop`} role="heading" aria-level={3}>
-                  {skill.name}
-                </h3>
-                <p className="text-sm text-gray-500 mb-1 uppercase tracking-wide font-medium">
-                  {skill.category}
-                </p>
-                <p className="text-gray-600 leading-relaxed" id={`skill-${index}-description-desktop`}>
-                  {skill.description}
-                </p>
-              </div>
-            </motion.div>
-          ))}
-        </motion.div>
-
-        {/* Load More Button - Mobile Only */}
-        {!showAllSkills && hasMoreSkills && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-            className="md:hidden text-center mb-12"
+          <h2
+            className="text-3xl font-semibold tracking-tight text-foreground sm:text-4xl"
+            role="heading"
+            aria-level={2}
           >
-            <button
-              onClick={() => setShowAllSkills(true)}
-              className="px-6 py-3 bg-gray-900 text-white text-sm font-medium rounded-full hover:bg-gray-800 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 active:bg-gray-700"
-              aria-label={`Show ${filteredSkills.length - 6} more skills`}
-            >
-              Load More ({filteredSkills.length - 6} more)
-            </button>
-          </motion.div>
-        )}
-
-        {/* Skills Summary */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.6 }}
-          viewport={{ once: true }}
-          className="border-t border-gray-200 pt-8 md:pt-12 text-center px-4 md:px-0"
-        >
-          <h3 className="text-xl md:text-2xl font-semibold text-gray-900 mb-4 md:mb-6" role="heading" aria-level={3}>
-            Let's Build Something Together
-          </h3>
-          <div className="flex flex-wrap justify-center gap-2 max-w-4xl mx-auto" role="list" aria-label="All available skills summary">
-            {skillsData.map((skill, index) => (
-              <motion.span
-                key={skill.name}
-                initial={{ opacity: 0, scale: 0.8 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.4, delay: index * 0.05 }}
-                viewport={{ once: true }}
-                className="px-3 py-1 text-xs md:text-sm text-gray-700 border border-gray-200 rounded-full hover:border-gray-300 hover:bg-gray-50 transition-all duration-200 active:bg-gray-100"
-                role="listitem"
-              >
-                {skill.name}
-              </motion.span>
-            ))}
-          </div>
+            The toolkit
+          </h2>
+          <p className="mt-4 text-lg leading-relaxed text-muted-foreground">
+            The modern stack I build with most, across interface, database, and
+            deployment. Expand for the full toolkit.
+          </p>
         </motion.div>
+
+        <div className="grid gap-x-12 gap-y-10 md:grid-cols-2">
+          {groups.map((group) => {
+            const shown = showAll
+              ? group.skills
+              : group.skills.filter((s) => s.trending);
+            return (
+              <div key={group.category}>
+                <div className="mb-5 flex items-baseline gap-3 border-b border-border pb-3">
+                  <h3
+                    className="font-mono text-xs uppercase tracking-[0.18em] text-accent"
+                    role="heading"
+                    aria-level={3}
+                  >
+                    {group.category}
+                  </h3>
+                  <span className="font-mono text-xs text-muted-foreground">
+                    {String(group.skills.length).padStart(2, "0")}
+                  </span>
+                </div>
+
+                <ul className="flex flex-wrap gap-2.5" role="list">
+                  {shown.map((skill, index) => (
+                    <motion.li
+                      key={skill.name}
+                      initial={reduce ? false : { opacity: 0, y: 12 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true, amount: 0.4 }}
+                      transition={{
+                        duration: 0.35,
+                        delay: Math.min(index * 0.04, 0.3),
+                      }}
+                      className="group flex items-center gap-2.5 rounded-full border border-border bg-card py-2 pl-2 pr-4 transition-all duration-200 hover:-translate-y-0.5 hover:border-accent/50"
+                    >
+                      <span className="flex h-7 w-7 items-center justify-center rounded-full bg-white ring-1 ring-border/60">
+                        <Logo skill={skill} />
+                      </span>
+                      <span className="text-sm font-medium text-foreground transition-colors duration-200 group-hover:text-accent">
+                        {skill.name}
+                      </span>
+                    </motion.li>
+                  ))}
+                </ul>
+              </div>
+            );
+          })}
+        </div>
+
+        <div className="mt-12 flex justify-center">
+          <button
+            type="button"
+            onClick={() => setShowAll((v) => !v)}
+            aria-expanded={showAll}
+            className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-border px-6 py-2.5 text-sm font-medium text-foreground transition-colors duration-200 hover:border-accent hover:text-accent focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+          >
+            {showAll ? "Show less" : `Show ${olderCount} more`}
+            <CaretDown
+              size={15}
+              weight="bold"
+              className={`transition-transform duration-300 ${
+                showAll ? "rotate-180" : ""
+              }`}
+              aria-hidden="true"
+            />
+          </button>
+        </div>
       </div>
-      {/* Soft gradient overlay at bottom */}
-      <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-purple-50/60 to-transparent pointer-events-none" />
     </section>
   );
 };

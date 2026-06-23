@@ -1,5 +1,156 @@
 @import "tailwindcss";
 
-body {
-  font-family: var(--font-aleo), sans-serif;
+/* Class-based dark mode: <html class="dark"> */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/*
+  ONE accent for the whole site: warm amber/gold.
+  Primary actions stay neutral (near-black / off-white) so the accent
+  reads as a deliberate highlight, not decoration. Tokens swap at runtime;
+  utilities (bg-background, text-foreground, text-accent ...) come from @theme.
+*/
+:root {
+  --background: #fafaf9; /* warm off-white */
+  --foreground: #1c1917; /* near-black, warm */
+  --muted: #f4f3f1; /* alternating section surface */
+  --muted-foreground: #6b6660;
+  --card: #ffffff;
+  --card-foreground: #1c1917;
+  --border: #e7e4e0;
+  --accent: #b45309; /* amber-700 — AA on light */
+  --accent-strong: #92400e; /* amber-800 for active/hover */
+  --accent-soft: #fdf2dc; /* warm tint surface */
+  --ring: #d97706;
+}
+
+.dark {
+  --background: #0c0a09; /* stone-950 */
+  --foreground: #fafaf9;
+  --muted: #1a1613;
+  --muted-foreground: #a8a097;
+  --card: #16110f;
+  --card-foreground: #fafaf9;
+  --border: #2a2420;
+  --accent: #fbbf24; /* amber-400 */
+  --accent-strong: #fcd34d; /* amber-300 for active/hover */
+  --accent-soft: #2a1f0e;
+  --ring: #f59e0b;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-border: var(--border);
+  --color-accent: var(--accent);
+  --color-accent-strong: var(--accent-strong);
+  --color-accent-soft: var(--accent-soft);
+  --color-ring: var(--ring);
+
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    /* fixed pill nav clearance for anchor jumps */
+    scroll-padding-top: 6rem;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
+
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  ::selection {
+    background-color: var(--accent);
+    color: var(--background);
+  }
+
+  /* themed Swiper pagination */
+  .swiper-pagination-bullet {
+    background: var(--muted-foreground) !important;
+    opacity: 0.4 !important;
+  }
+  .swiper-pagination-bullet-active {
+    background: var(--accent) !important;
+    opacity: 1 !important;
+  }
+}
+
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes hero-rise {
+  from {
+    opacity: 0;
+    transform: translateY(0.6rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes hero-word {
+  from {
+    opacity: 0;
+    transform: translateY(0.25em);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@layer utilities {
+  .animate-marquee {
+    animation: marquee 50s linear infinite;
+  }
+  .hero-rise {
+    animation: hero-rise 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+  .hero-word {
+    display: inline-block;
+    animation: hero-word 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .animate-marquee,
+    .hero-rise,
+    .hero-word {
+      animation: none;
+    }
+  }
+
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .line-clamp-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
 }

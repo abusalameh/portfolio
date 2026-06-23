@@ -1,14 +1,19 @@
 import type { Metadata } from "next";
-import { Aleo } from "next/font/google";
+import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import BlobCursor from "../components/BlobCursor";
-import SplashCursor from "../components/SplashCursor";
-import LightRays from "../components/LightRays";
 import { PostHogProvider } from "@/components/Providers";
+import ThemeScript from "../components/ThemeScript";
 
-const aleo = Aleo({
-  variable: "--font-aleo",
+const geistSans = Geist({
+  variable: "--font-geist-sans",
   subsets: ["latin"],
+  display: "swap",
+});
+
+const geistMono = Geist_Mono({
+  variable: "--font-geist-mono",
+  subsets: ["latin"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -86,33 +91,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
+        <ThemeScript />
       </head>
-      <body className={`${aleo.variable} antialiased bg-white text-gray-900`}>
-        <PostHogProvider>
-          <LightRays
-            raysOrigin="top-center"
-            raysColor="rgba(59, 130, 246, 0.5)"
-            raysSpeed={0.8}
-            lightSpread={60}
-            rayLength={120}
-            pulsating={true}
-            fadeDistance={70}
-            followMouse={true}
-            mouseInfluence={0.3}
-          />
-          {/* <SplashCursor
-          color="#3b82f6"
-          size={16}
-          splashCount={8}
-          splashSize={6}
-          animationDuration={0.8}
-        /> */}
-          {children}
-        </PostHogProvider>
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} font-sans antialiased bg-background text-foreground`}
+      >
+        <PostHogProvider>{children}</PostHogProvider>
       </body>
     </html>
   );
