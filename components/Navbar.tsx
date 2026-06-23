@@ -1,256 +1,254 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import {
+  motion,
+  AnimatePresence,
+  useScroll,
+  useMotionValueEvent,
+} from "motion/react";
+import {
+  CaretRight,
+  LinkedinLogo,
+  GithubLogo,
+  WhatsappLogo,
+  EnvelopeSimple,
+  type Icon,
+} from "@phosphor-icons/react";
+import ThemeToggle from "./ThemeToggle";
+
+const navItems = [
+  { name: "About", href: "#hero" },
+  { name: "Work", href: "#projects" },
+  { name: "Experience", href: "#experience" },
+  { name: "Skills", href: "#skills" },
+  { name: "Services", href: "#services" },
+  { name: "Contact", href: "#contact" },
+];
+
+const menuSocials: { label: string; href: string; icon: Icon }[] = [
+  { label: "Email", href: "mailto:future.adv2@gmail.com", icon: EnvelopeSimple },
+  { label: "LinkedIn", href: "https://linkedin.com/in/raja-salameh", icon: LinkedinLogo },
+  { label: "GitHub", href: "https://github.com/abusalameh", icon: GithubLogo },
+  { label: "WhatsApp", href: "https://wa.me/972598509358", icon: WhatsappLogo },
+];
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("hero");
+  const [scrolled, setScrolled] = useState(false);
   const [indicatorStyle, setIndicatorStyle] = useState({ left: 0, width: 0 });
-  const navRefs = useRef<(HTMLButtonElement | null)[]>([]);
+  const navRefs = useRef<(HTMLAnchorElement | null)[]>([]);
 
-  const navItems = [
-    { name: "About", href: "#hero" },
-    { name: "Services", href: "#services" },
-    { name: "Skills", href: "#skills" },
-    { name: "Experience", href: "#experience" },
-    { name: "Projects", href: "#projects" },
-    { name: "Contact", href: "#contact" },
-  ];
+  const { scrollY } = useScroll();
+  useMotionValueEvent(scrollY, "change", (y) => setScrolled(y > 24));
 
-  // Update indicator position based on active section
   const updateIndicator = () => {
     const activeIndex = navItems.findIndex(
       (item) => item.href.replace("#", "") === activeSection
     );
-    const activeButton = navRefs.current[activeIndex];
-
-    if (activeButton) {
-      const { offsetLeft, offsetWidth } = activeButton;
-      setIndicatorStyle({ left: offsetLeft, width: offsetWidth });
-    }
+    const el = navRefs.current[activeIndex];
+    if (el) setIndicatorStyle({ left: el.offsetLeft, width: el.offsetWidth });
   };
 
-  // Update indicator when active section changes
   useEffect(() => {
     updateIndicator();
   }, [activeSection]);
 
-  // Set initial indicator position after component mounts
   useEffect(() => {
-    const timer = setTimeout(() => {
-      updateIndicator();
-    }, 100); // Small delay to ensure refs are set
-    return () => clearTimeout(timer);
+    const timer = setTimeout(updateIndicator, 100);
+    const onResize = () => updateIndicator();
+    window.addEventListener("resize", onResize);
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener("resize", onResize);
+    };
   }, []);
 
-  // Update indicator on window resize
-  useEffect(() => {
-    const handleResize = () => updateIndicator();
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, [activeSection]);
-
-  // Scroll detection to update active section
   useEffect(() => {
     const sections = navItems.map((item) => item.href.replace("#", ""));
-    const observerOptions = {
-      root: null,
-      rootMargin: "-20% 0px -60% 0px",
-      threshold: 0,
-    };
-
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          setActiveSection(entry.target.id);
-        }
-      });
-    }, observerOptions);
-
-    // Observe all sections
-    sections.forEach((sectionId) => {
-      const element = document.getElementById(sectionId);
-      if (element) {
-        observer.observe(element);
-      }
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) setActiveSection(entry.target.id);
+        });
+      },
+      { root: null, rootMargin: "-20% 0px -60% 0px", threshold: 0 }
+    );
+    sections.forEach((id) => {
+      const el = document.getElementById(id);
+      if (el) observer.observe(el);
     });
-
-    return () => {
-      sections.forEach((sectionId) => {
-        const element = document.getElementById(sectionId);
-        if (element) {
-          observer.unobserve(element);
-        }
-      });
-    };
+    return () => observer.disconnect();
   }, []);
 
-  const handleSmoothScroll = (targetId: string) => {
-    const sectionId = targetId.replace("#", "");
-    const element = document.getElementById(sectionId);
-    if (element) {
-      setActiveSection(sectionId); // Update active section immediately on click
-      element.scrollIntoView({
-        behavior: "smooth",
-        block: "start",
-      });
-    }
-    setIsMenuOpen(false); // Close mobile menu after clicking
+  // Optimistically move the indicator on click; native anchor handles scroll + focus.
+  const handleClick = (href: string) => {
+    setActiveSection(href.replace("#", ""));
+    setIsMenuOpen(false);
   };
 
   return (
     <nav
-      className="fixed top-4 left-1/2 transform -translate-x-1/2 z-300 w-[calc(100%-2rem)] md:w-[calc(100%-4rem)] lg:w-[70%] xl:w-[55%] 2xl:w-[45%] "
-      role="navigation"
-      aria-label="Main navigation"
+      className="fixed left-1/2 top-4 z-[90] w-[calc(100%-1.5rem)] -translate-x-1/2 md:w-[calc(100%-4rem)] lg:w-auto"
+      aria-label="Main"
     >
-      <div className="bg-white/20 backdrop-blur-xl border border-white/30 rounded-full px-4 md:px-6 py-3 shadow-lg min-w-fit">
-        <div className="flex items-center justify-between">
-          {/* Logo */}
-          <div className="flex-shrink-0 flex-1 mr-auto">
-            <a
-              href="#hero"
-              className="text-lg font-bold text-gray-800 hover:text-blue-600 transition-colors duration-200 cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:rounded-md"
-              aria-label="Go to homepage - Raja Abu Salameh"
-            >
-              Raja Abu Salameh
-            </a>
-          </div>
+      <div
+        className={`flex items-center justify-between gap-2 rounded-full border px-3 py-2 backdrop-blur-xl transition-[background-color,box-shadow,border-color] duration-300 md:gap-4 md:px-4 ${
+          scrolled || isMenuOpen
+            ? "border-border bg-card shadow-md"
+            : "border-border/70 bg-card/60 shadow-sm"
+        }`}
+      >
+        {/* Logo */}
+        <a
+          href="#hero"
+          onClick={() => handleClick("#hero")}
+          className="flex-shrink-0 pl-2 text-sm font-semibold tracking-tight text-foreground transition-colors duration-200 hover:text-accent focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:rounded-md"
+        >
+          Raja<span className="text-accent">.</span>
+        </a>
 
-          {/* Desktop Navigation */}
-          <div
-            className=" flex-1 hidden md:flex items-center relative"
-            role="menubar"
-            aria-label="Desktop navigation menu"
+        {/* Desktop nav */}
+        <ul className="relative hidden items-center lg:flex">
+          <motion.span
+            className="absolute h-9 rounded-full bg-muted dark:bg-white/10"
+            aria-hidden="true"
+            animate={{ left: indicatorStyle.left, width: indicatorStyle.width }}
+            transition={{ type: "spring", stiffness: 320, damping: 32 }}
+          />
+          {navItems.map((item, index) => {
+            const isActive = activeSection === item.href.replace("#", "");
+            return (
+              <li key={item.name}>
+                <a
+                  ref={(el) => {
+                    navRefs.current[index] = el;
+                  }}
+                  href={item.href}
+                  onClick={() => handleClick(item.href)}
+                  aria-current={isActive ? "page" : undefined}
+                  className={`relative z-10 block rounded-full px-4 py-2 text-sm font-medium transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background ${
+                    isActive
+                      ? "text-accent"
+                      : "text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  {item.name}
+                </a>
+              </li>
+            );
+          })}
+        </ul>
+
+        <div className="flex items-center gap-1.5">
+          <ThemeToggle />
+          <button
+            type="button"
+            onClick={() => setIsMenuOpen((o) => !o)}
+            className="flex items-center justify-center rounded-full p-2 text-foreground transition-colors duration-200 hover:text-accent focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background lg:hidden"
+            aria-label={isMenuOpen ? "Close menu" : "Open menu"}
+            aria-expanded={isMenuOpen}
+            aria-controls="mobile-menu"
           >
-            {/* Sliding Background Indicator */}
-            <motion.div
-              className="absolute bg-gray-200 rounded-full h-10 z-0"
-              animate={{
-                left: indicatorStyle.left,
-                width: indicatorStyle.width,
-              }}
-              transition={{
-                type: "spring",
-                stiffness: 300,
-                damping: 30,
-              }}
-            />
-            {navItems.map((item, index) => (
-              <button
-                key={item.name}
-                ref={(el) => {
-                  navRefs.current[index] = el;
-                }}
-                onClick={() => handleSmoothScroll(item.href)}
-                className={`px-3 md:px-4 py-2 rounded-full text-xs md:text-sm font-medium transition-colors duration-200 cursor-pointer relative z-10 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
-                  activeSection === item.href.replace("#", "")
-                    ? "text-gray-900"
-                    : "text-gray-700 hover:text-gray-900"
-                }`}
-                aria-label={`Navigate to ${item.name} section`}
-                role="menuitem"
-                aria-current={
-                  activeSection === item.href.replace("#", "")
-                    ? "page"
-                    : undefined
-                }
-              >
-                {item.name}
-              </button>
-            ))}
-          </div>
-
-          {/* Mobile menu button */}
-          <div className="md:hidden">
-            <button
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="flex items-center justify-center p-2 rounded-full text-gray-800 hover:text-blue-600 hover:bg-gray-100/20 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-200 cursor-pointer"
-              aria-label={isMenuOpen ? "Close main menu" : "Open main menu"}
-              aria-expanded={isMenuOpen}
-              aria-controls="mobile-menu"
-            >
-              <span className="sr-only">Open main menu</span>
-              <div className="w-6 h-6 flex flex-col justify-center items-center relative">
-                <motion.span
-                  className="block h-0.5 w-6 bg-current absolute"
-                  animate={{
-                    rotate: isMenuOpen ? 45 : 0,
-                    y: isMenuOpen ? 0 : -6,
-                  }}
-                  transition={{ duration: 0.3, ease: "easeInOut" }}
-                />
-                <motion.span
-                  className="block h-0.5 w-6 bg-current absolute"
-                  animate={{
-                    opacity: isMenuOpen ? 0 : 1,
-                  }}
-                  transition={{ duration: 0.3, ease: "easeInOut" }}
-                />
-                <motion.span
-                  className="block h-0.5 w-6 bg-current absolute"
-                  animate={{
-                    rotate: isMenuOpen ? -45 : 0,
-                    y: isMenuOpen ? 0 : 6,
-                  }}
-                  transition={{ duration: 0.3, ease: "easeInOut" }}
-                />
-              </div>
-            </button>
-          </div>
+            <span className="sr-only">Toggle menu</span>
+            <div className="relative flex h-6 w-6 flex-col items-center justify-center">
+              <motion.span
+                className="absolute block h-0.5 w-6 bg-current"
+                animate={{ rotate: isMenuOpen ? 45 : 0, y: isMenuOpen ? 0 : -6 }}
+                transition={{ duration: 0.3, ease: "easeInOut" }}
+              />
+              <motion.span
+                className="absolute block h-0.5 w-6 bg-current"
+                animate={{ opacity: isMenuOpen ? 0 : 1 }}
+                transition={{ duration: 0.2 }}
+              />
+              <motion.span
+                className="absolute block h-0.5 w-6 bg-current"
+                animate={{ rotate: isMenuOpen ? -45 : 0, y: isMenuOpen ? 0 : 6 }}
+                transition={{ duration: 0.3, ease: "easeInOut" }}
+              />
+            </div>
+          </button>
         </div>
       </div>
 
-      {/* Mobile Navigation */}
+      {/* Mobile menu */}
       <AnimatePresence>
         {isMenuOpen && (
           <motion.div
             id="mobile-menu"
-            className="absolute top-full left-0 right-0 mt-2 md:hidden"
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.3, ease: "easeInOut" }}
-            role="menu"
-            aria-label="Mobile navigation menu"
+            className="absolute left-0 right-0 top-full mt-2 lg:hidden"
+            initial={{ opacity: 0, y: -8, scale: 0.98 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -8, scale: 0.98 }}
+            transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
           >
-            <motion.div
-              className="bg-white/20 backdrop-blur-xl border border-white/30 rounded-2xl p-4 shadow-lg"
-              initial={{ scale: 0.95 }}
-              animate={{ scale: 1 }}
-              exit={{ scale: 0.95 }}
-              transition={{ duration: 0.3, ease: "easeInOut" }}
-            >
-              {navItems.map((item, index) => (
-                <motion.button
-                  key={item.name}
-                  onClick={() => handleSmoothScroll(item.href)}
-                  className={`block px-4 py-3 rounded-xl text-base font-medium transition-colors duration-200 w-full text-left cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
-                    activeSection === item.href.replace("#", "")
-                      ? "bg-gray-200 text-gray-900"
-                      : "text-gray-700 hover:text-gray-900 hover:bg-gray-100/20"
-                  }`}
-                  aria-label={`Navigate to ${item.name} section`}
-                  role="menuitem"
-                  aria-current={
-                    activeSection === item.href.replace("#", "")
-                      ? "page"
-                      : undefined
-                  }
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -20 }}
-                  transition={{
-                    duration: 0.3,
-                    ease: "easeInOut",
-                    delay: index * 0.05,
-                  }}
-                >
-                  {item.name}
-                </motion.button>
-              ))}
-            </motion.div>
+            <div className="overflow-hidden rounded-3xl border border-border bg-card p-2 shadow-2xl">
+              <ul className="space-y-1.5">
+                {navItems.map((item, index) => {
+                  const isActive = activeSection === item.href.replace("#", "");
+                  return (
+                    <motion.li
+                      key={item.name}
+                      initial={{ opacity: 0, x: -12 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 0.04 + index * 0.04, duration: 0.25 }}
+                    >
+                      <a
+                        href={item.href}
+                        onClick={() => handleClick(item.href)}
+                        aria-current={isActive ? "page" : undefined}
+                        className={`group flex items-center gap-4 rounded-2xl px-4 py-3.5 transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background ${
+                          isActive
+                            ? "bg-muted text-foreground dark:bg-white/10"
+                            : "text-muted-foreground hover:bg-muted hover:text-foreground dark:hover:bg-white/5"
+                        }`}
+                      >
+                        <span
+                          className={`font-mono text-xs tabular-nums ${
+                            isActive ? "text-accent" : "text-muted-foreground/70"
+                          }`}
+                        >
+                          {String(index + 1).padStart(2, "0")}
+                        </span>
+                        <span className="flex-1 text-lg font-medium tracking-tight">
+                          {item.name}
+                        </span>
+                        <CaretRight
+                          size={16}
+                          weight="bold"
+                          className={`transition-transform duration-200 ${
+                            isActive
+                              ? "text-accent"
+                              : "text-muted-foreground/50 group-hover:translate-x-0.5"
+                          }`}
+                          aria-hidden="true"
+                        />
+                      </a>
+                    </motion.li>
+                  );
+                })}
+              </ul>
+
+              <div className="mt-2 flex items-center justify-center gap-2 border-t border-border px-2 pb-1 pt-3">
+                {menuSocials.map(({ label, href, icon: IconCmp }) => {
+                  const external = href.startsWith("http");
+                  return (
+                    <a
+                      key={label}
+                      href={href}
+                      target={external ? "_blank" : undefined}
+                      rel={external ? "noopener noreferrer" : undefined}
+                      className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-border text-muted-foreground transition-colors duration-200 hover:border-accent hover:text-accent focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                      aria-label={external ? `${label}, opens in a new tab` : label}
+                    >
+                      <IconCmp size={18} weight="regular" aria-hidden="true" />
+                    </a>
+                  );
+                })}
+              </div>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>

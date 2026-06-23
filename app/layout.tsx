@@ -1,14 +1,20 @@
-import type { Metadata } from "next";
-import { Aleo } from "next/font/google";
+import type { Metadata, Viewport } from "next";
+import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import BlobCursor from "../components/BlobCursor";
-import SplashCursor from "../components/SplashCursor";
-import LightRays from "../components/LightRays";
 import { PostHogProvider } from "@/components/Providers";
+import ThemeScript from "../components/ThemeScript";
+import CursorLight from "../components/CursorLight";
 
-const aleo = Aleo({
-  variable: "--font-aleo",
+const geistSans = Geist({
+  variable: "--font-geist-sans",
   subsets: ["latin"],
+  display: "swap",
+});
+
+const geistMono = Geist_Mono({
+  variable: "--font-geist-mono",
+  subsets: ["latin"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -80,39 +86,67 @@ export const metadata: Metadata = {
   },
 };
 
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#f0f8ff" },
+    { media: "(prefers-color-scheme: dark)", color: "#14181e" },
+  ],
+};
+
+// Structured data for richer search results.
+const personJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  name: "Raja Abu Salameh",
+  url: "https://abusalameh.dev",
+  image: "https://abusalameh.dev/me.jpg",
+  jobTitle: "Full Stack Developer",
+  description:
+    "Full Stack Developer specializing in React, Vue, Next.js, and Laravel.",
+  address: {
+    "@type": "PostalAddress",
+    addressLocality: "Jenin",
+    addressCountry: "PS",
+  },
+  sameAs: [
+    "https://linkedin.com/in/raja-salameh",
+    "https://github.com/abusalameh",
+  ],
+  knowsAbout: [
+    "React",
+    "Next.js",
+    "Vue.js",
+    "Laravel",
+    "TypeScript",
+    "Node.js",
+    "Performance Optimization",
+    "SEO",
+  ],
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
+        <ThemeScript />
+        <script
+          type="application/ld+json"
+          // eslint-disable-next-line react/no-danger
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}
+        />
       </head>
-      <body className={`${aleo.variable} antialiased bg-white text-gray-900`}>
-        <PostHogProvider>
-          <LightRays
-            raysOrigin="top-center"
-            raysColor="rgba(59, 130, 246, 0.5)"
-            raysSpeed={0.8}
-            lightSpread={60}
-            rayLength={120}
-            pulsating={true}
-            fadeDistance={70}
-            followMouse={true}
-            mouseInfluence={0.3}
-          />
-          {/* <SplashCursor
-          color="#3b82f6"
-          size={16}
-          splashCount={8}
-          splashSize={6}
-          animationDuration={0.8}
-        /> */}
-          {children}
-        </PostHogProvider>
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} font-sans antialiased bg-background text-foreground`}
+      >
+        <CursorLight />
+        <PostHogProvider>{children}</PostHogProvider>
       </body>
     </html>
   );
