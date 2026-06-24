@@ -6,6 +6,9 @@ import {
   AnimatePresence,
   useScroll,
   useMotionValueEvent,
+  useSpring,
+  useTransform,
+  useVelocity,
 } from "motion/react";
 import {
   CaretRight,
@@ -37,18 +40,39 @@ const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("hero");
   const [scrolled, setScrolled] = useState(false);
-  const [indicatorStyle, setIndicatorStyle] = useState({ left: 0, width: 0 });
   const navRefs = useRef<(HTMLAnchorElement | null)[]>([]);
+  const positioned = useRef(false);
 
   const { scrollY } = useScroll();
   useMotionValueEvent(scrollY, "change", (y) => setScrolled(y > 24));
 
-  const updateIndicator = () => {
+  // Active-link indicator position, on a springy track (a little under-damped
+  // so the travel itself has some liquid overshoot).
+  const left = useSpring(0, { stiffness: 460, damping: 30, mass: 0.8 });
+  const width = useSpring(0, { stiffness: 460, damping: 30, mass: 0.8 });
+
+  // Water-drop squash & stretch: the faster the blob travels, the more it
+  // elongates horizontally and thins vertically, then wobbles back to round.
+  const xVelocity = useVelocity(left);
+  const scaleX = useTransform(xVelocity, [-1400, 0, 1400], [1.7, 1, 1.7]);
+  const scaleY = useTransform(xVelocity, [-1400, 0, 1400], [0.58, 1, 0.58]);
+  const dropScaleX = useSpring(scaleX, { stiffness: 360, damping: 17 });
+  const dropScaleY = useSpring(scaleY, { stiffness: 360, damping: 17 });
+
+  const updateIndicator = (instant = false) => {
     const activeIndex = navItems.findIndex(
       (item) => item.href.replace("#", "") === activeSection
     );
     const el = navRefs.current[activeIndex];
-    if (el) setIndicatorStyle({ left: el.offsetLeft, width: el.offsetWidth });
+    if (!el) return;
+    if (instant || !positioned.current) {
+      left.jump(el.offsetLeft);
+      width.jump(el.offsetWidth);
+      positioned.current = true;
+    } else {
+      left.set(el.offsetLeft);
+      width.set(el.offsetWidth);
+    }
   };
 
   useEffect(() => {
@@ -56,8 +80,8 @@ const Navbar = () => {
   }, [activeSection]);
 
   useEffect(() => {
-    const timer = setTimeout(updateIndicator, 100);
-    const onResize = () => updateIndicator();
+    const timer = setTimeout(() => updateIndicator(true), 100);
+    const onResize = () => updateIndicator(true);
     window.addEventListener("resize", onResize);
     return () => {
       clearTimeout(timer);
@@ -89,17 +113,30 @@ const Navbar = () => {
   };
 
   return (
-    <nav
-      className="fixed left-1/2 top-4 z-[90] w-[calc(100%-1.5rem)] -translate-x-1/2 md:w-[calc(100%-4rem)] lg:w-auto"
-      aria-label="Main"
-    >
+    <>
+      {/* Progressive blur veil: frosts content scrolling beneath the floating
+          navbar, from the top edge down past the pill, fading to clear. */}
       <div
-        className={`flex items-center justify-between gap-2 rounded-full border px-3 py-2 backdrop-blur-xl transition-[background-color,box-shadow,border-color] duration-300 md:gap-4 md:px-4 ${
-          scrolled || isMenuOpen
-            ? "border-border bg-card shadow-md"
-            : "border-border/70 bg-card/60 shadow-sm"
+        aria-hidden="true"
+        className={`pointer-events-none fixed inset-x-0 top-0 z-[80] h-32 transition-opacity duration-300 ${
+          scrolled ? "opacity-100" : "opacity-0"
         }`}
+        style={{
+          backdropFilter: "blur(10px)",
+          WebkitBackdropFilter: "blur(10px)",
+          background:
+            "linear-gradient(to bottom, color-mix(in srgb, var(--background) 70%, transparent) 0%, color-mix(in srgb, var(--background) 40%, transparent) 45%, transparent 100%)",
+          maskImage:
+            "linear-gradient(to bottom, #000 0%, #000 50%, transparent 100%)",
+          WebkitMaskImage:
+            "linear-gradient(to bottom, #000 0%, #000 50%, transparent 100%)",
+        }}
+      />
+      <nav
+        className="fixed left-1/2 top-4 z-[90] w-[calc(100%-1.5rem)] -translate-x-1/2 md:w-[calc(100%-4rem)] lg:w-auto"
+        aria-label="Main"
       >
+      <div className="glass-nav flex items-center justify-between gap-2 rounded-full px-3 py-2 transition-shadow duration-300 md:gap-4 md:px-4">
         {/* Logo */}
         <a
           href="#hero"
@@ -112,10 +149,9 @@ const Navbar = () => {
         {/* Desktop nav */}
         <ul className="relative hidden items-center lg:flex">
           <motion.span
-            className="absolute h-9 rounded-full bg-muted dark:bg-white/10"
+            className="glass-pill absolute h-10 rounded-full"
             aria-hidden="true"
-            animate={{ left: indicatorStyle.left, width: indicatorStyle.width }}
-            transition={{ type: "spring", stiffness: 320, damping: 32 }}
+            style={{ left, width, scaleX: dropScaleX, scaleY: dropScaleY }}
           />
           {navItems.map((item, index) => {
             const isActive = activeSection === item.href.replace("#", "");
@@ -128,7 +164,7 @@ const Navbar = () => {
                   href={item.href}
                   onClick={() => handleClick(item.href)}
                   aria-current={isActive ? "page" : undefined}
-                  className={`relative z-10 block rounded-full px-4 py-2 text-sm font-medium transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background ${
+                  className={`relative z-10 block rounded-full px-5 py-2.5 text-sm font-medium transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background ${
                     isActive
                       ? "text-accent"
                       : "text-muted-foreground hover:text-foreground"
@@ -184,7 +220,7 @@ const Navbar = () => {
             exit={{ opacity: 0, y: -8, scale: 0.98 }}
             transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
           >
-            <div className="overflow-hidden rounded-3xl border border-border bg-card p-2 shadow-2xl">
+            <div className="glass-nav overflow-hidden rounded-3xl p-2">
               <ul className="space-y-1.5">
                 {navItems.map((item, index) => {
                   const isActive = activeSection === item.href.replace("#", "");
@@ -252,7 +288,8 @@ const Navbar = () => {
           </motion.div>
         )}
       </AnimatePresence>
-    </nav>
+      </nav>
+    </>
   );
 };
 
