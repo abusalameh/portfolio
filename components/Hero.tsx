@@ -30,7 +30,7 @@ const Hero = () => {
       />
 
       <div className="relative flex flex-1 items-center px-5 sm:px-8">
-        <div className="mx-auto w-full max-w-5xl">
+        <div className="mx-auto grid w-full max-w-6xl items-center gap-12 lg:grid-cols-[1.1fr_0.9fr] lg:gap-16">
           {/* message */}
           <div>
             {/* kinetic headline - pure CSS per-word stagger */}
@@ -92,6 +92,34 @@ const Hero = () => {
                 <ArrowDown size={17} weight="bold" aria-hidden="true" />
                 Download CV
               </Link>
+            </div>
+          </div>
+
+          {/* portrait + particle field (above text on mobile, right on desktop) */}
+          <div
+            className="hero-rise relative order-first mx-auto aspect-square w-56 place-self-center sm:w-72 lg:order-none lg:w-[22rem]"
+            style={{ animationDelay: "0.45s" }}
+          >
+            <div className="portrait-glow" aria-hidden="true" />
+            <div className="portrait-ring" aria-hidden="true" />
+            <div className="portrait-orbit portrait-orbit-1" aria-hidden="true">
+              <span />
+            </div>
+            <div className="portrait-orbit portrait-orbit-2" aria-hidden="true">
+              <span />
+            </div>
+            <div className="portrait-orbit portrait-orbit-3" aria-hidden="true">
+              <span />
+            </div>
+            <div className="portrait-photo">
+              <Image
+                src="/me.jpg"
+                alt="Raja Abu Salameh"
+                fill
+                sizes="352px"
+                priority
+                className="object-cover object-center"
+              />
             </div>
           </div>
         </div>

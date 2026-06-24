@@ -122,9 +122,125 @@
   }
 }
 
+@keyframes portrait-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes portrait-spin-reverse {
+  to {
+    transform: rotate(-360deg);
+  }
+}
+
+@keyframes portrait-pulse {
+  0%,
+  100% {
+    opacity: 0.5;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.85;
+    transform: scale(1.05);
+  }
+}
+
 @layer utilities {
   .animate-marquee {
     animation: marquee 50s linear infinite;
+  }
+
+  /* Hero portrait: layered circular frame with a rotating accent ring and
+     orbiting particles. Pure CSS so Hero stays a server component. */
+  .portrait-glow {
+    position: absolute;
+    inset: -14%;
+    border-radius: 9999px;
+    background: radial-gradient(
+      circle at 50% 50%,
+      color-mix(in srgb, var(--accent) 38%, transparent),
+      transparent 68%
+    );
+    animation: portrait-pulse 4.5s ease-in-out infinite;
+    z-index: 0;
+  }
+  .portrait-ring {
+    position: absolute;
+    inset: 0;
+    border-radius: 9999px;
+    background: conic-gradient(
+      from 0deg,
+      transparent 0deg,
+      var(--accent) 70deg,
+      transparent 200deg,
+      var(--accent) 320deg,
+      transparent 360deg
+    );
+    -webkit-mask: radial-gradient(
+      farthest-side,
+      transparent calc(100% - 3px),
+      #000 calc(100% - 3px)
+    );
+    mask: radial-gradient(
+      farthest-side,
+      transparent calc(100% - 3px),
+      #000 calc(100% - 3px)
+    );
+    animation: portrait-spin 6s linear infinite;
+    z-index: 1;
+  }
+  .portrait-photo {
+    position: absolute;
+    inset: 11px;
+    border-radius: 9999px;
+    overflow: hidden;
+    z-index: 2;
+    border: 1px solid var(--border);
+    box-shadow: 0 24px 60px -24px color-mix(in srgb, var(--accent) 45%, transparent);
+  }
+  .portrait-orbit {
+    position: absolute;
+    inset: 0;
+    border-radius: 9999px;
+    z-index: 3;
+    pointer-events: none;
+  }
+  .portrait-orbit span {
+    position: absolute;
+    left: 50%;
+    top: -3px;
+    height: 9px;
+    width: 9px;
+    margin-left: -4.5px;
+    border-radius: 9999px;
+    background: var(--accent);
+    box-shadow: 0 0 12px 2px color-mix(in srgb, var(--accent) 70%, transparent);
+  }
+  .portrait-orbit-1 {
+    animation: portrait-spin 9s linear infinite;
+  }
+  .portrait-orbit-2 {
+    animation: portrait-spin-reverse 15s linear infinite;
+  }
+  .portrait-orbit-2 span {
+    top: 5%;
+    left: 8%;
+    height: 5px;
+    width: 5px;
+    margin-left: 0;
+  }
+  .portrait-orbit-3 {
+    animation: portrait-spin 22s linear infinite;
+  }
+  .portrait-orbit-3 span {
+    top: auto;
+    bottom: 6%;
+    left: 14%;
+    height: 4px;
+    width: 4px;
+    margin-left: 0;
+    opacity: 0.7;
   }
   .hero-rise {
     animation: hero-rise 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
@@ -146,7 +262,10 @@
   @media (prefers-reduced-motion: reduce) {
     .animate-marquee,
     .hero-rise,
-    .hero-word {
+    .hero-word,
+    .portrait-glow,
+    .portrait-ring,
+    .portrait-orbit {
       animation: none;
     }
   }
