@@ -174,7 +174,7 @@ const Experience = () => {
             teams.
           </h2>
           <p className="mt-5 max-w-xl text-lg leading-relaxed text-muted-foreground">
-            From startups and enterprise clients to running my own product —
+            From startups and enterprise clients to running my own product,
             building and leading work that ships to production.
           </p>
         </motion.div>

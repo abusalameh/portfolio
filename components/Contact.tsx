@@ -37,7 +37,7 @@ const Contact = () => {
     >
       <div className="mx-auto max-w-6xl px-5 sm:px-8">
         <div className="grid gap-x-16 gap-y-12 lg:grid-cols-[1.1fr_1fr]">
-          {/* Left — statement */}
+          {/* Left - statement */}
           <motion.div {...rise(0)}>
             <h2
               className="text-5xl font-semibold leading-[1.02] tracking-tight text-foreground sm:text-6xl lg:text-7xl"
@@ -64,7 +64,7 @@ const Contact = () => {
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-border text-muted-foreground transition-colors duration-200 hover:border-accent hover:text-accent focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-                    aria-label={`${label} — opens in a new tab`}
+                    aria-label={`${label}, opens in a new tab`}
                   >
                     <IconCmp size={19} weight="regular" aria-hidden="true" />
                   </Link>
@@ -73,12 +73,12 @@ const Contact = () => {
             </div>
           </motion.div>
 
-          {/* Right — labeled contact index */}
+          {/* Right - labeled contact index */}
           <motion.dl
             {...rise(0.12)}
             className="flex flex-col self-center"
           >
-            {/* Email — primary */}
+            {/* Email - primary */}
             <div className="border-t border-border py-6 first:border-t-0 first:pt-0 sm:py-7">
               <dt className="font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground">
                 Email

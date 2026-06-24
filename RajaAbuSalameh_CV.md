@@ -107,7 +107,7 @@ Senior Software Engineer with 8+ years of experience in building and optimizing 
 
 **Arab American University**  
 *Sep 2012 – Jan 2016*  
-B.Sc in Computer Science — GPA: **3.05**  
+B.Sc in Computer Science, GPA: **3.05**  
 
 ---
 

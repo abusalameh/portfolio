@@ -33,7 +33,7 @@ const Hero = () => {
         <div className="mx-auto w-full max-w-5xl">
           {/* message */}
           <div>
-            {/* kinetic headline — pure CSS per-word stagger */}
+            {/* kinetic headline - pure CSS per-word stagger */}
             <h1 className="max-w-4xl text-balance text-5xl font-semibold leading-[1.03] tracking-tight text-foreground sm:text-6xl lg:text-[5.5rem]">
               {words.map((w, i) => (
                 <span
@@ -97,7 +97,7 @@ const Hero = () => {
         </div>
       </div>
 
-      {/* live project marquee — real work, subtle motion */}
+      {/* live project marquee - real work, subtle motion */}
       <div
         className="hero-rise group relative mt-12 w-full overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_6%,black_94%,transparent)] sm:mt-20"
         style={{ animationDelay: "0.55s" }}

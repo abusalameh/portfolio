@@ -19,28 +19,18 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://abusalameh.dev"),
-  title: "Raja Abu Salameh - Full Stack Developer & Web Solutions Expert",
+  title: "Raja Abu Salameh - Full Stack Developer (React, Next.js, Laravel)",
   description:
-    "Experienced Full Stack Developer specializing in React.js, Vue.js, Next.js, Laravel, and modern web technologies. Expert in frontend development, backend architecture, performance optimization, and SEO.",
+    "Full-stack developer with 8+ years building fast, accessible web apps in React, Vue, Next.js, and Laravel. Ecommerce, CMS platforms, and performance work.",
   keywords: [
+    "Raja Abu Salameh",
     "Full Stack Developer",
-    "React.js Developer",
+    "React Developer",
+    "Next.js Developer",
     "Vue.js Developer",
-    "Next.js Expert",
     "Laravel Developer",
-    "PHP Developer",
-    "Node.js Developer",
-    "Frontend Development",
-    "Backend Development",
-    "Web Development",
     "TypeScript",
-    "JavaScript",
-    "Performance Optimization",
-    "SEO Expert",
-    "TailwindCSS",
-    "MySQL",
-    "PostgreSQL",
-    "Web Solutions",
+    "Web Performance",
   ],
   authors: [{ name: "Raja Abu Salameh" }],
   creator: "Raja Abu Salameh",
@@ -60,9 +50,9 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_US",
     url: "https://abusalameh.dev",
-    title: "Raja Abu Salameh - Full Stack Developer & Web Solutions Expert",
+    title: "Raja Abu Salameh - Full Stack Developer (React, Next.js, Laravel)",
     description:
-      "Experienced Full Stack Developer specializing in React.js, Vue.js, Next.js, Laravel, and modern web technologies. Expert in frontend development, backend architecture, performance optimization, and SEO.",
+      "Full-stack developer with 8+ years building fast, accessible web apps in React, Vue, Next.js, and Laravel. Ecommerce, CMS platforms, and performance work.",
     siteName: "Raja Abu Salameh Portfolio",
     images: [
       {
@@ -75,9 +65,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Raja Abu Salameh - Full Stack Developer & Web Solutions Expert",
+    title: "Raja Abu Salameh - Full Stack Developer (React, Next.js, Laravel)",
     description:
-      "Experienced Full Stack Developer specializing in React.js, Vue.js, Next.js, Laravel, and modern web technologies.",
+      "Full-stack developer with 8+ years building fast, accessible web apps in React, Vue, Next.js, and Laravel.",
     images: ["/me.jpg"],
     creator: "@rajaabu",
   },

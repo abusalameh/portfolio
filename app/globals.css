@@ -10,21 +10,21 @@
   utilities (bg-background, text-foreground, text-accent ...) come from @theme.
 */
 :root {
-  --background: #f0f8ff; /* alice blue — cool off-white */
+  --background: #f0f8ff; /* alice blue - cool off-white */
   --foreground: #161b22; /* near-black, cool */
   --muted: #e4eefa; /* alternating section surface, cool */
   --muted-foreground: #5a6470; /* AA (>=4.5:1) on background and muted */
   --card: #ffffff; /* pure white reads as elevated on the blue tint */
   --card-foreground: #161b22;
   --border: #d6e3f0;
-  --accent: #1d4ed8; /* blue-700 — AA on light */
+  --accent: #1d4ed8; /* blue-700 - AA on light */
   --accent-strong: #1e40af; /* blue-800 for active/hover */
   --accent-soft: #dbeafe; /* cool tint surface (blue-100) */
   --ring: #3b82f6;
 }
 
 .dark {
-  --background: #14181e; /* cool charcoal — lifted off pure black */
+  --background: #14181e; /* cool charcoal - lifted off pure black */
   --foreground: #f4f7fb;
   --muted: #1b2129; /* alternating section surface, slightly lighter */
   --muted-foreground: #98a3b1;
@@ -112,7 +112,7 @@
 }
 
 /* Transform-only (no opacity) so the headline paints instantly at full
-   opacity — it counts as the LCP immediately while keeping a subtle slide. */
+   opacity - it counts as the LCP immediately while keeping a subtle slide. */
 @keyframes hero-word {
   from {
     transform: translateY(0.22em);

@@ -11,7 +11,7 @@ export function PostHogProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     const key = process.env.NEXT_PUBLIC_POSTHOG_KEY;
-    // No key configured — skip analytics entirely so posthog-js never ships
+    // No key configured - skip analytics entirely so posthog-js never ships
     // in the initial bundle and the page works without it.
     if (!key) return;
 

@@ -24,7 +24,7 @@ const capabilities: Capability[] = [
     title: "Full-stack product builds",
     summary: "From database schema to the pixels users touch.",
     description:
-      "I take products end to end: data modeling, APIs, auth, and the interface on top. Ecommerce, CMS-driven sites, and web apps shipped as one coherent system rather than handed-off parts.",
+      "I build products end to end: data modeling, APIs, auth, and the interface on top. Ecommerce, CMS sites, and web apps where the backend and frontend are built together.",
     stack: ["Next.js", "Laravel", "PostgreSQL", "PayloadCMS"],
     icon: StackSimple,
   },
@@ -38,9 +38,9 @@ const capabilities: Capability[] = [
   },
   {
     title: "Backend & APIs",
-    summary: "Server architecture built for security and scale.",
+    summary: "Backends that stay secure as they grow.",
     description:
-      "Robust services, clean data layers, and APIs that hold up under load. I design schemas and integrations that stay predictable as traffic and feature scope increase.",
+      "Services, data layers, and APIs that stay reliable as traffic grows. I design schemas and integrations that are easy to extend as the product gets bigger.",
     stack: ["Node.js", "Laravel", "MySQL", "Redis"],
     icon: Database,
   },
@@ -48,7 +48,7 @@ const capabilities: Capability[] = [
     title: "Performance & SEO",
     summary: "Faster loads, stronger rankings, real metrics.",
     description:
-      "Core Web Vitals work, technical SEO, and SSR/SSG where it counts. I have cut client load times by up to 40% and lifted search visibility through measured optimization, not guesswork.",
+      "Core Web Vitals work, technical SEO, and SSR/SSG where it helps. I have cut client load times by up to 40% and improved search visibility with changes I can measure.",
     stack: ["Core Web Vitals", "SSR / SSG", "Technical SEO"],
     icon: Gauge,
   },
@@ -82,8 +82,8 @@ const Services = () => {
               How I can help
             </h2>
             <p className="mt-4 text-lg leading-relaxed text-muted-foreground">
-              One layer or the whole product. Four ways I plug into a team and
-              ship work that holds up in production.
+              Whether you need help with one part or the whole thing, here are
+              four ways I can work with your team.
             </p>
           </div>
         </motion.div>

@@ -39,7 +39,7 @@ const projects: Project[] = [
     id: "9",
     title: "Uqhoan Handcrafted Gifts",
     description:
-      "Ecommerce storefront for handcrafted gifts — weddings, celebrations, newborns, and special occasions — with a clean, fast Arabic shopping experience.",
+      "Ecommerce storefront for handcrafted gifts for weddings, celebrations, newborns, and special occasions, with a clean, fast Arabic shopping experience.",
     technologies: ["Next.js", "TailwindCSS", "Supabase"],
     url: "https://uqhoan.com",
     category: "Frontend",
@@ -51,7 +51,7 @@ const projects: Project[] = [
     id: "8",
     title: "SalmaSoft Store Builder",
     description:
-      "Ecommerce platform that lets anyone create and launch their own digital store in minutes — Arabic-first, with local payment methods, free SSL, and zero sales commission.",
+      "Ecommerce platform that lets anyone create and launch their own digital store in minutes. Arabic-first, with local payment methods, free SSL, and zero sales commission.",
     technologies: ["Next.js", "TailwindCSS", "Supabase"],
     url: "https://salmasoft.com",
     category: "Full Stack",
@@ -87,7 +87,7 @@ const projects: Project[] = [
     id: "3",
     title: "QuizPlus E-learning",
     description:
-      "Interactive learning platform with quiz management, progress tracking, real-time analytics, and student assessment tools built for scale.",
+      "Interactive learning platform with quiz management, progress tracking, real-time analytics, and student assessment tools.",
     technologies: ["Angular", "SCSS", "TypeScript", "Firebase"],
     url: "https://quizplus.com",
     category: "Frontend",
@@ -166,7 +166,7 @@ const BrowserFrame = ({
     target="_blank"
     rel="noopener noreferrer"
     className="group block overflow-hidden rounded-xl border border-border bg-card shadow-sm transition-shadow duration-300 hover:shadow-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-    aria-label={`${project.title}, ${hostname(project.url)} — visit live site, opens in a new tab`}
+    aria-label={`${project.title}, ${hostname(project.url)}, visit live site, opens in a new tab`}
   >
     <div className="flex items-center gap-2 border-b border-border bg-muted px-4 py-2.5">
       <span className="flex gap-1.5" aria-hidden="true">
