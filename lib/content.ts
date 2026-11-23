@@ -31,7 +31,7 @@ export const dict = {
     ],
     ctaTop: "ابدأ مشروعك",
     role: "رجا أبو سلامة، مهندس برمجيات ومؤسس سلمى سوفت",
-    h1: "أبني تطبيقات ويب *سريعة وموثوقة.*",
+    h1: "أبني حلولًا رقمية *سريعة وموثوقة.*",
     sub: "مهندس برمجيات ومؤسس سلمى سوفت، بخبرة تزيد عن عشر سنوات في تطوير الويب.",
     name: "رجا أبو سلامة",
     pause: "إيقاف العرض مؤقتًا",
@@ -129,7 +129,7 @@ export const dict = {
     meta: {
       title: "رجا أبو سلامة | مهندس برمجيات ومؤسس سلمى سوفت",
       description:
-        "أبني تطبيقات ويب سريعة وموثوقة. أكثر من عشر سنوات في تطوير الويب مع React وNext.js وVue وLaravel، ومؤسس سلمى سوفت، منصة عربية لإنشاء المتاجر الإلكترونية.",
+        "أبني حلولًا رقمية سريعة وموثوقة. أكثر من عشر سنوات في تطوير الويب مع React وNext.js وVue وLaravel، ومؤسس سلمى سوفت، منصة عربية لإنشاء المتاجر الإلكترونية.",
     },
   },
   en: {
@@ -142,7 +142,7 @@ export const dict = {
     ],
     ctaTop: "Start a project",
     role: "Raja Abu Salameh, founder and senior engineer",
-    h1: "I build web apps that *perform.*",
+    h1: "I build digital solutions *that perform.*",
     sub: "Software engineer and founder of SalmaSoft, with 10+ years building for the web.",
     name: "Raja Abu Salameh",
     pause: "Pause showcase",
@@ -242,7 +242,7 @@ export const dict = {
     meta: {
       title: "Raja Abu Salameh | Software engineer and founder of SalmaSoft",
       description:
-        "I build web apps that perform. 10+ years building for the web with React, Next.js, Vue and Laravel, and founder of SalmaSoft, an Arabic-first platform for building online stores.",
+        "I build digital solutions that perform. 10+ years building for the web with React, Next.js, Vue and Laravel, and founder of SalmaSoft, an Arabic-first platform for building online stores.",
     },
   },
 } as const;
