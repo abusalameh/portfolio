@@ -1,13 +1,13 @@
 "use client";
 
-import Lenis from "lenis";
 import { useEffect } from "react";
 
 /**
  * All page-level motion and scroll behaviour in one place, mirroring the approved mock:
  * entrance reveal, sticky-header state, active nav section, stacking services deck,
- * count-up numbers, lazy on-screen videos, floating project preview, magnetic buttons
- * and Lenis smooth scrolling. Everything is skipped or simplified under reduced motion.
+ * count-up numbers, lazy videos, floating project preview and magnetic buttons.
+ * Scrolling is native (no scroll hijacking) so it stays light on trackpads and phones.
+ * Per-frame work only runs while it is visible. Reduced motion skips it all.
  */
 export default function Effects() {
   useEffect(() => {
@@ -26,7 +26,7 @@ export default function Effects() {
             io.unobserve(e.target);
           }
         }),
-      { threshold: 0.12 },
+      { threshold: 0.01, rootMargin: "0px 0px -4% 0px" },
     );
     document.querySelectorAll(".rv").forEach((el) => {
       io.observe(el);
@@ -53,33 +53,47 @@ export default function Effects() {
     });
     cleanups.push(() => navIO.disconnect());
 
-    // header shadow + stacking services deck
+    // header shadow + stacking services deck (one batched read/write per frame, only while visible)
     const header = document.querySelector("header.site");
     const cards = [...document.querySelectorAll<HTMLElement>(".s")];
-    const onScroll = () => {
+    const tops = cards.map(
+      (c) => Number.parseFloat(getComputedStyle(c).top) || 0,
+    );
+    const services = document.getElementById("services");
+    let deckOn = false;
+    let ticking = false;
+    const frame = () => {
+      ticking = false;
       header?.classList.toggle("scrolled", window.scrollY > 10);
-      if (reduce) return;
+      if (reduce || !deckOn) return;
+      const vh = window.innerHeight;
+      const rects = cards.map((c) => c.getBoundingClientRect().top);
       cards.forEach((c, i) => {
-        const next = cards[i + 1];
-        let p = 0;
-        if (next) {
-          const top = Number.parseFloat(getComputedStyle(c).top) || 0;
-          const r = next.getBoundingClientRect();
-          p = Math.min(
-            1,
-            Math.max(
-              0,
-              (window.innerHeight - r.top) / (window.innerHeight - top),
-            ),
-          );
-        }
-        c.style.setProperty("--sc", (1 - p * 0.07).toFixed(4));
+        const p =
+          i < cards.length - 1
+            ? Math.min(1, Math.max(0, (vh - rects[i + 1]) / (vh - tops[i])))
+            : 0;
+        c.style.setProperty("--sc", (1 - p * 0.07).toFixed(3));
         c.style.setProperty("--dim", (p * 0.32).toFixed(3));
       });
     };
+    const onScroll = () => {
+      if (!ticking) {
+        ticking = true;
+        requestAnimationFrame(frame);
+      }
+    };
+    const dio = new IntersectionObserver(([e]) => {
+      deckOn = e.isIntersecting;
+      if (deckOn) onScroll();
+    });
+    if (services) dio.observe(services);
     window.addEventListener("scroll", onScroll, { passive: true });
     onScroll();
-    cleanups.push(() => window.removeEventListener("scroll", onScroll));
+    cleanups.push(() => {
+      window.removeEventListener("scroll", onScroll);
+      dio.disconnect();
+    });
 
     // numbers count up once
     const cio = new IntersectionObserver(
@@ -122,7 +136,22 @@ export default function Effects() {
     document
       .querySelectorAll<HTMLVideoElement>("video[data-src]")
       .forEach((v) => {
-        if (!v.closest(".film")) vio.observe(v);
+        if (v.closest(".film")) return;
+        const tile = v.closest<HTMLElement>(".tile");
+        if (tile && fine) {
+          // mouse users: posters at rest, the recording plays while hovered
+          const on = () => {
+            if (!v.getAttribute("src") && v.dataset.src) v.src = v.dataset.src;
+            if (!reduce) v.play().catch(() => {});
+          };
+          const off = () => v.pause();
+          tile.addEventListener("pointerenter", on);
+          tile.addEventListener("pointerleave", off);
+          cleanups.push(() => {
+            tile.removeEventListener("pointerenter", on);
+            tile.removeEventListener("pointerleave", off);
+          });
+        } else vio.observe(v);
       });
     cleanups.push(() => vio.disconnect());
 
@@ -140,12 +169,16 @@ export default function Effects() {
         if (r?.dataset.img) {
           fi.src = r.dataset.img;
           fl.classList.add("on");
+          if (!raf) raf = requestAnimationFrame(loop);
         }
       };
       const out = (e: PointerEvent) => {
         const r = (e.target as Element).closest(".prow");
-        if (r && !r.contains(e.relatedTarget as Node))
+        if (r && !r.contains(e.relatedTarget as Node)) {
           fl.classList.remove("on");
+          cancelAnimationFrame(raf);
+          raf = 0;
+        }
       };
       const move = (e: PointerEvent) => {
         tx = e.clientX + 24;
@@ -160,7 +193,6 @@ export default function Effects() {
       document.addEventListener("pointerover", over);
       document.addEventListener("pointerout", out);
       window.addEventListener("pointermove", move, { passive: true });
-      raf = requestAnimationFrame(loop);
       cleanups.push(() => {
         document.removeEventListener("pointerover", over);
         document.removeEventListener("pointerout", out);
@@ -172,7 +204,12 @@ export default function Effects() {
     // magnetic buttons
     if (fine && !reduce) {
       const mags = [...document.querySelectorAll<HTMLElement>(".mag")];
-      const pull = (e: PointerEvent) => {
+      let mx = 0;
+      let my = 0;
+      let mt = false;
+      const apply = () => {
+        mt = false;
+        const e = { clientX: mx, clientY: my };
         mags.forEach((b) => {
           const r = b.getBoundingClientRect();
           const dx = e.clientX - (r.left + r.width / 2);
@@ -188,36 +225,33 @@ export default function Effects() {
           );
         });
       };
+      const pull = (e: PointerEvent) => {
+        mx = e.clientX;
+        my = e.clientY;
+        if (!mt) {
+          mt = true;
+          requestAnimationFrame(apply);
+        }
+      };
       window.addEventListener("pointermove", pull, { passive: true });
       cleanups.push(() => window.removeEventListener("pointermove", pull));
     }
 
-    // smooth scrolling + in-page anchors
-    if (!reduce) {
-      const lenis = new Lenis({ lerp: 0.09 });
-      let lr = 0;
-      const tick = (t: number) => {
-        lenis.raf(t);
-        lr = requestAnimationFrame(tick);
-      };
-      lr = requestAnimationFrame(tick);
-      const anchor = (e: MouseEvent) => {
-        const a = (e.target as Element).closest<HTMLAnchorElement>(
-          'a[href^="#"]',
-        );
-        if (!a) return;
-        const h = a.getAttribute("href") ?? "#top";
-        e.preventDefault();
-        lenis.scrollTo(h === "#top" ? 0 : h, { offset: -72, duration: 1.3 });
-        history.replaceState(null, "", h === "#top" ? " " : h);
-      };
-      document.addEventListener("click", anchor);
-      cleanups.push(() => {
-        document.removeEventListener("click", anchor);
-        cancelAnimationFrame(lr);
-        lenis.destroy();
-      });
-    }
+    // in-page anchors: native smooth scroll with the sticky-header offset
+    const anchor = (e: MouseEvent) => {
+      const a = (e.target as Element).closest<HTMLAnchorElement>(
+        'a[href^="#"]',
+      );
+      if (!a) return;
+      const h = a.getAttribute("href") ?? "#top";
+      const el = h === "#top" ? null : document.querySelector(h);
+      e.preventDefault();
+      const y = el ? el.getBoundingClientRect().top + window.scrollY - 72 : 0;
+      window.scrollTo({ top: y, behavior: reduce ? "auto" : "smooth" });
+      history.replaceState(null, "", h === "#top" ? " " : h);
+    };
+    document.addEventListener("click", anchor);
+    cleanups.push(() => document.removeEventListener("click", anchor));
 
     return () => {
       for (const c of cleanups) c();
