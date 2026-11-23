@@ -5,7 +5,7 @@ import { useEffect } from "react";
 /**
  * All page-level motion and scroll behaviour in one place, mirroring the approved mock:
  * entrance reveal, sticky-header state, active nav section, stacking services deck,
- * count-up numbers, lazy videos, floating project preview and magnetic buttons.
+ * count-up numbers, floating project preview and magnetic buttons.
  * Scrolling is native (no scroll hijacking) so it stays light on trackpads and phones.
  * Per-frame work only runs while it is visible. Reduced motion skips it all.
  */
@@ -120,40 +120,6 @@ export default function Effects() {
       cio.observe(el);
     });
     cleanups.push(() => cio.disconnect());
-
-    // videos outside the hero load and play only while on screen
-    const vio = new IntersectionObserver(
-      (entries) =>
-        entries.forEach((e) => {
-          const v = e.target as HTMLVideoElement;
-          if (e.isIntersecting) {
-            if (!v.getAttribute("src") && v.dataset.src) v.src = v.dataset.src;
-            if (!reduce) v.play().catch(() => {});
-          } else v.pause();
-        }),
-      { threshold: 0.25 },
-    );
-    document
-      .querySelectorAll<HTMLVideoElement>("video[data-src]")
-      .forEach((v) => {
-        if (v.closest(".film")) return;
-        const tile = v.closest<HTMLElement>(".tile");
-        if (tile && fine) {
-          // mouse users: posters at rest, the recording plays while hovered
-          const on = () => {
-            if (!v.getAttribute("src") && v.dataset.src) v.src = v.dataset.src;
-            if (!reduce) v.play().catch(() => {});
-          };
-          const off = () => v.pause();
-          tile.addEventListener("pointerenter", on);
-          tile.addEventListener("pointerleave", off);
-          cleanups.push(() => {
-            tile.removeEventListener("pointerenter", on);
-            tile.removeEventListener("pointerleave", off);
-          });
-        } else vio.observe(v);
-      });
-    cleanups.push(() => vio.disconnect());
 
     // floating preview that follows the cursor over the "more projects" list
     const fl = document.querySelector<HTMLElement>(".float");

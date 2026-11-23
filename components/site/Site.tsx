@@ -23,6 +23,7 @@ import {
 } from "@/lib/content";
 import Effects from "./Effects";
 import LangLink from "./LangLink";
+import Shot from "./Shot";
 import Showcase from "./Showcase";
 
 const SERVICE_ICONS = [Stack, Devices, Database, MagnifyingGlass];
@@ -167,15 +168,8 @@ export default function Site({ locale }: { locale: Locale }) {
                 href={p.url}
                 {...ext}
               >
-                {p.video ? (
-                  <video
-                    data-src={p.video}
-                    poster={p.image}
-                    muted
-                    loop
-                    playsInline
-                    preload="none"
-                  />
+                {p.shot ? (
+                  <Shot name={p.shot} sizes="(max-width: 860px) 100vw, 60vw" />
                 ) : (
                   // biome-ignore lint/performance/noImgElement: static export
                   <img src={p.image} alt={p.name[locale]} loading="lazy" />

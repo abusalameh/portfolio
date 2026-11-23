@@ -351,7 +351,7 @@ h1 em {
   border-radius: 2px;
   background: var(--red);
   transform-origin: left;
-  animation: fill 6.5s linear both;
+  animation: fill 8s linear both;
 }
 :root[dir="rtl"] .tab .bar {
   transform-origin: right;
@@ -1372,4 +1372,66 @@ a.lang:hover {
 .s:nth-child(2) .k,
 .s:nth-child(2) p {
   opacity: 1;
+}
+
+/* ── panning screenshots: tall Retina captures moved with translate (GPU), crisp at any size ── */
+.scroller {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  container-type: size;
+  background: #fff;
+}
+.scroller img {
+  position: absolute;
+  inset-inline: 0;
+  top: 0;
+  width: 100%;
+  height: auto;
+  max-width: none;
+  will-change: translate;
+  backface-visibility: hidden;
+}
+/* hero: the active slide fades in and pans down part of the page while its tab runs */
+.film .scroller {
+  z-index: 1;
+  opacity: 0;
+  transition: opacity 0.8s var(--ease);
+}
+.film .scroller.on {
+  opacity: 1;
+}
+.film .scroller.on img {
+  animation: pan-hero 8s cubic-bezier(0.45, 0, 0.35, 1) 0.4s both;
+}
+.paused .film .scroller img {
+  animation-play-state: paused;
+}
+@keyframes pan-hero {
+  to {
+    translate: 0 calc(-38% + 100cqh);
+  }
+}
+/* tiles: rest at the top, pan the whole page while hovered (always on touch screens) */
+.tile .scroller img {
+  animation: pan-full 22s cubic-bezier(0.45, 0, 0.55, 1) infinite alternate;
+  animation-play-state: paused;
+}
+.tile:hover .scroller img {
+  animation-play-state: running;
+}
+@media (hover: none) {
+  .tile .scroller img {
+    animation-play-state: running;
+  }
+}
+@keyframes pan-full {
+  to {
+    translate: 0 calc(-100% + 100cqh);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .scroller img {
+    animation: none !important;
+  }
 }

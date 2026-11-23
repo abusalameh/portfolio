@@ -251,7 +251,8 @@ export type Dict = (typeof dict)[Locale];
 export type Featured = {
   key: string;
   url: string;
-  video: string | null;
+  /** base name of a tall Retina screenshot in /media/shots that pans inside the tile */
+  shot: string | null;
   image: string;
   name: Bi;
   type: Bi;
@@ -262,8 +263,8 @@ export const featured: Featured[] = [
   {
     key: "salma",
     url: "https://salmasoft.com",
-    video: "/media/salmasoft.mp4",
-    image: "/media/salmasoft.jpg",
+    shot: "salmasoft",
+    image: "/media/shots/salmasoft-top.webp",
     name: {
       en: "SalmaSoft",
       ar: "سلمى سوفت",
@@ -281,8 +282,8 @@ export const featured: Featured[] = [
   {
     key: "do",
     url: "https://doprint.ps",
-    video: "/media/doprint.mp4",
-    image: "/media/doprint.jpg",
+    shot: "doprint",
+    image: "/media/shots/doprint-top.webp",
     name: {
       en: "dO Print",
       ar: "dO Print",
@@ -300,8 +301,8 @@ export const featured: Featured[] = [
   {
     key: "rosa",
     url: "https://rosaline.pro",
-    video: "/media/rosaline.mp4",
-    image: "/media/rosaline.jpg",
+    shot: "rosaline",
+    image: "/media/shots/rosaline-top.webp",
     name: {
       en: "RosaLine",
       ar: "روزا لاين",
@@ -319,8 +320,8 @@ export const featured: Featured[] = [
   {
     key: "uq",
     url: "https://uqhoan.com",
-    video: null,
-    image: "/media/uqhoan.jpg",
+    shot: null,
+    image: "/media/shots/uqhoan-photo.webp",
     name: {
       en: "Uqhoan",
       ar: "أقحوان",
@@ -338,8 +339,8 @@ export const featured: Featured[] = [
   {
     key: "yalla",
     url: "https://yallabites.com",
-    video: "/media/yallabites.mp4",
-    image: "/media/yallabites-site.jpg",
+    shot: "yallabites",
+    image: "/media/shots/yallabites-top.webp",
     name: {
       en: "YallaBites",
       ar: "يلا بايتس",
@@ -357,8 +358,8 @@ export const featured: Featured[] = [
   {
     key: "osp",
     url: "https://onestopparking.com",
-    video: null,
-    image: "/media/one-stop-parking.jpg",
+    shot: null,
+    image: "/media/shots/one-stop-parking.webp",
     name: {
       en: "OneStopParking",
       ar: "OneStopParking",
@@ -602,7 +603,8 @@ export const experience: Job[] = [
 
 export type Slide = {
   url: string;
-  video?: string;
+  /** base name of a tall Retina screenshot in /media/shots */
+  shot?: string;
   poster?: string;
   image?: string;
   name: Bi;
@@ -610,8 +612,8 @@ export type Slide = {
 };
 export const showcase: Slide[] = [
   {
-    video: "/media/salmasoft.mp4",
-    poster: "/media/salmasoft.jpg",
+    shot: "salmasoft",
+    poster: "/media/shots/salmasoft-top.webp",
     name: {
       ar: "سلمى سوفت",
       en: "SalmaSoft",
@@ -620,8 +622,8 @@ export const showcase: Slide[] = [
     url: "https://salmasoft.com",
   },
   {
-    video: "/media/doprint.mp4",
-    poster: "/media/doprint.jpg",
+    shot: "doprint",
+    poster: "/media/shots/doprint-top.webp",
     name: {
       ar: "dO Print",
       en: "dO Print",
@@ -630,8 +632,8 @@ export const showcase: Slide[] = [
     url: "https://doprint.ps",
   },
   {
-    video: "/media/rosaline.mp4",
-    poster: "/media/rosaline.jpg",
+    shot: "rosaline",
+    poster: "/media/shots/rosaline-top.webp",
     name: {
       ar: "روزا لاين",
       en: "RosaLine",
@@ -640,8 +642,8 @@ export const showcase: Slide[] = [
     url: "https://rosaline.pro",
   },
   {
-    video: "/media/yallabites.mp4",
-    poster: "/media/yallabites.jpg",
+    shot: "yallabites",
+    poster: "/media/shots/yallabites-top.webp",
     name: {
       ar: "يلا بايتس",
       en: "YallaBites",
@@ -650,7 +652,7 @@ export const showcase: Slide[] = [
     url: "https://yallabites.com",
   },
   {
-    image: "/media/one-stop-parking.jpg",
+    image: "/media/shots/one-stop-parking.webp",
     name: {
       ar: "OneStopParking",
       en: "OneStopParking",

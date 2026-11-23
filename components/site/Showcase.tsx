@@ -3,8 +3,9 @@
 import { useEffect, useRef, useState } from "react";
 import { preload } from "react-dom";
 import { type Locale, showcase } from "@/lib/content";
+import Shot from "./Shot";
 
-const HOLD_MS = 6500;
+const HOLD_MS = 8000;
 
 type Labels = { pause: string; play: string; visit: string };
 
@@ -26,10 +27,9 @@ export default function Showcase({
   const [active, setActive] = useState(0);
   const [loaded, setLoaded] = useState<Set<number>>(() => new Set());
   const [paused, setPaused] = useState(false);
-  const refs = useRef<Array<HTMLVideoElement | null>>([]);
   const reduce = useRef(false);
 
-  // start loading the first video only after the page has settled, so it never competes with first paint
+  // load the first tall screenshot only after the page has settled, so it never competes with first paint
   useEffect(() => {
     reduce.current = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
@@ -46,13 +46,8 @@ export default function Showcase({
       });
   }, []);
 
-  // play the active slide, pause the rest; advance on a timer unless paused
+  // advance on a timer unless paused (the pan itself is pure CSS on the active slide)
   useEffect(() => {
-    refs.current.forEach((v, i) => {
-      if (!v) return;
-      if (i === active && !paused) v.play().catch(() => {});
-      else v.pause();
-    });
     if (paused) return;
     const t = setTimeout(() => {
       const n = (active + 1) % showcase.length;
@@ -64,8 +59,6 @@ export default function Showcase({
 
   const go = (i: number) => {
     setLoaded((s) => new Set(s).add(i).add((i + 1) % showcase.length));
-    const v = refs.current[i];
-    if (v) v.currentTime = 0;
     setActive(i);
   };
 
@@ -74,7 +67,7 @@ export default function Showcase({
   return (
     <div className={`stage rv${paused ? " paused" : ""}`}>
       <figure className="film">
-        {/* real image under the first video, so the hero paints from a fetched-early image rather than waiting for video */}
+        {/* light top-of-page image under the first slide, so the hero paints immediately */}
         {/* biome-ignore lint/performance/noImgElement: static export */}
         <img
           className="poster0"
@@ -84,19 +77,13 @@ export default function Showcase({
           decoding="async"
         />
         {showcase.map((s, i) =>
-          s.video ? (
-            <video
+          s.shot ? (
+            <Shot
               key={s.host}
-              ref={(el) => {
-                refs.current[i] = el;
-              }}
-              className={i === active ? "on" : undefined}
-              src={loaded.has(i) ? s.video : undefined}
-              poster={s.poster}
-              muted
-              loop
-              playsInline
-              preload={loaded.has(i) ? "auto" : "none"}
+              name={s.shot}
+              sizes="(max-width: 900px) 100vw, 1260px"
+              load={loaded.has(i)}
+              active={i === active}
             />
           ) : (
             // biome-ignore lint/performance/noImgElement: static export, plain img is intended
