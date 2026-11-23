@@ -776,22 +776,53 @@ a:hover .go svg {
   color: #fff;
 }
 
-/* ── 1. Bento: media tiles ───────────────────────── */
+/* ── 1. Bento: two groups (projects, online stores), caption under each image ── */
+.grp + .grp,
+#more {
+  margin-top: clamp(64px, 9vh, 96px);
+}
+.grp-h {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px 32px;
+  flex-wrap: wrap;
+  margin-bottom: 22px;
+}
+.grp-h h3 {
+  font: 800 clamp(26px, 2.6vw, 36px) / 1.2 var(--display);
+}
+:root[lang="en"] .grp-h h3 {
+  letter-spacing: -0.03em;
+}
+.grp-h p {
+  color: var(--ink-2);
+  font-size: 16px;
+}
 .bento {
   display: grid;
   grid-template-columns: repeat(12, 1fr);
-  grid-auto-rows: clamp(180px, 17vw, 240px);
-  gap: 14px;
+  grid-auto-rows: clamp(220px, 20vw, 290px);
+  grid-auto-flow: dense;
+  gap: 28px 16px;
 }
 .tile {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-width: 0;
+  color: var(--ink);
+}
+.tile .media {
   position: relative;
+  flex: 1;
+  min-height: 0;
   border-radius: 28px;
   overflow: hidden;
   background: var(--soft);
   isolation: isolate;
 }
-.tile img,
-.tile video {
+.tile img {
   position: absolute;
   inset: 0;
   width: 100%;
@@ -800,20 +831,8 @@ a:hover .go svg {
   object-position: top;
   transition: transform 1.2s var(--ease);
 }
-.tile:hover img,
-.tile:hover video {
+.tile:hover img {
   transform: scale(1.04);
-}
-.tile::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    to top,
-    rgba(10, 10, 14, 0.72),
-    rgba(10, 10, 14, 0) 55%
-  );
-  z-index: 1;
 }
 .tile .go {
   position: absolute;
@@ -822,35 +841,42 @@ a:hover .go svg {
   inset-inline-end: 16px;
 }
 .tile .chip {
+  box-shadow: 0 4px 14px -4px rgba(10, 10, 14, 0.28);
   position: absolute;
   z-index: 2;
   inset-block-start: 20px;
   inset-inline-start: 20px;
 }
 .tile .meta {
-  position: absolute;
-  z-index: 2;
-  inset-inline: 22px;
-  bottom: 20px;
-  color: #fff;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding-inline: 6px;
 }
 .tile .meta b {
-  display: block;
-  font: 800 clamp(20px, 2vw, 30px) / 1.2 var(--display);
+  font: 800 clamp(19px, 1.6vw, 24px) / 1.25 var(--display);
+  transition: color 0.3s;
+}
+.tile:hover .meta b {
+  color: var(--red);
 }
 .tile .meta span {
   font-size: 14px;
-  opacity: 0.8;
+  color: var(--ink-2);
 }
+/* projects: SalmaSoft leads at the start, two client platforms stacked beside it */
 .t-salma {
   grid-column: span 7;
   grid-row: span 2;
 }
-.t-do {
+.t-yalla,
+.t-osp {
   grid-column: span 5;
 }
+/* stores: the mirror, two wide stores at the start, the Uqhoan photo standing beside them */
+.t-do,
 .t-rosa {
-  grid-column: span 5;
+  grid-column: span 8;
 }
 .t-uq {
   grid-column: span 4;
@@ -858,31 +884,6 @@ a:hover .go svg {
 }
 .t-uq img {
   object-position: center;
-}
-.t-yalla {
-  grid-column: span 8;
-}
-.t-osp {
-  grid-column: span 4;
-}
-.t-all {
-  grid-column: span 4;
-  background: var(--ink);
-  color: #fff;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  padding: 24px;
-}
-.t-all::after {
-  display: none;
-}
-.t-all b {
-  font: 800 clamp(22px, 2.2vw, 32px) / 1.25 var(--display);
-}
-.t-all .go {
-  position: static;
-  align-self: flex-end;
 }
 
 /* ── 3. Big list with floating preview ─────────── */
@@ -956,26 +957,25 @@ a:hover .go svg {
   visibility: hidden;
 }
 @media (max-width: 860px) {
+  /* phones: one column, every image the same shape, caption underneath */
   .bento {
-    grid-template-columns: 1fr 1fr;
-    grid-auto-rows: 200px;
+    grid-template-columns: 1fr;
+    grid-auto-rows: auto;
+    gap: 30px;
   }
-  .t-salma {
-    grid-column: span 2;
-    grid-row: span 2;
+  .bento .tile {
+    grid-column: auto;
+    grid-row: auto;
   }
-  .t-do,
-  .t-rosa,
-  .t-yalla {
-    grid-column: span 2;
+  .tile .media {
+    flex: none;
+    aspect-ratio: 4 / 3;
   }
-  .t-uq {
-    grid-column: span 1;
-    grid-row: span 2;
-  }
-  .t-osp,
-  .t-all {
-    grid-column: span 1;
+  .grp-h {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+    margin-bottom: 18px;
   }
   .prow {
     grid-template-columns: 1fr auto;

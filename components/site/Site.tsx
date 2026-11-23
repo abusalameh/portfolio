@@ -167,42 +167,62 @@ export default function Site({ locale }: { locale: Locale }) {
             <h2>{t.wT}</h2>
             <p>{t.wP}</p>
           </div>
-          <div className="bento">
-            {featured.map((p) => (
-              <a
-                key={p.key}
-                className={`tile t-${p.key}`}
-                href={p.url}
-                {...ext}
-              >
-                {p.shot ? (
-                  <Shot name={p.shot} sizes="(max-width: 860px) 100vw, 60vw" />
-                ) : (
-                  // biome-ignore lint/performance/noImgElement: static export
-                  <img src={p.image} alt={p.name[locale]} loading="lazy" />
-                )}
-                <span className={`chip${p.founder ? " red" : ""}`}>
-                  {p.chip[locale]}
-                </span>
-                <span className="go">
-                  <Arrow />
-                </span>
-                <div className="meta">
-                  <b>{p.name[locale]}</b>
-                  <span>{p.type[locale]}</span>
-                </div>
-              </a>
-            ))}
-            <a className="tile t-all" href="#more">
-              <b>{t.allTile}</b>
-              <span className="go">
-                <Arrow />
-              </span>
-            </a>
-          </div>
+          {(
+            [
+              ["projects", t.gProjects, t.gProjectsP],
+              ["stores", t.gStores, t.gStoresP],
+            ] as const
+          ).map(([g, title, line]) => (
+            <div className={`grp grp-${g}`} key={g}>
+              <div className="grp-h rv">
+                <h3>{title}</h3>
+                <p>{line}</p>
+              </div>
+              <div className="bento">
+                {featured
+                  .filter((p) => p.group === g)
+                  .map((p) => (
+                    <a
+                      key={p.key}
+                      className={`tile t-${p.key}`}
+                      href={p.url}
+                      {...ext}
+                    >
+                      <div className="media">
+                        {p.shot ? (
+                          <Shot
+                            name={p.shot}
+                            sizes="(max-width: 860px) 100vw, 60vw"
+                          />
+                        ) : (
+                          // biome-ignore lint/performance/noImgElement: static export
+                          <img
+                            src={p.image}
+                            alt={p.name[locale]}
+                            loading="lazy"
+                          />
+                        )}
+                        {p.chip && (
+                          <span className={`chip${p.founder ? " red" : ""}`}>
+                            {p.chip[locale]}
+                          </span>
+                        )}
+                        <span className="go">
+                          <Arrow />
+                        </span>
+                      </div>
+                      <div className="meta">
+                        <b>{p.name[locale]}</b>
+                        <span>{p.type[locale]}</span>
+                      </div>
+                    </a>
+                  ))}
+              </div>
+            </div>
+          ))}
           <div id="more">
-            <div className="head rv more-head">
-              <h3 className="sub-h">{t.moreH}</h3>
+            <div className="grp-h rv">
+              <h3>{t.moreH}</h3>
               <p>{t.moreP}</p>
             </div>
             <div className="plist">

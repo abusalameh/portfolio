@@ -92,16 +92,19 @@ export const dict = {
       ],
     ],
     wT: "أعمال مختارة",
-    wP: "منتجي الخاص سلمى سوفت، ومتاجر تعمل عليه، وأعمال لعملاء. كلها تعمل الآن، افتح أيًّا منها وجرّبه.",
+    wP: "منتجي الخاص ومنصّات لعملاء، ومتاجر تعمل على سلمى سوفت. كلها تعمل الآن، افتح أيًّا منها وجرّبه.",
+    gProjects: "مشاريع",
+    gProjectsP: "منتجي الخاص، ومنصّات طوّرتها مع فرق العملاء.",
+    gStores: "متاجر إلكترونية",
+    gStoresP: "متاجر حقيقية تبيع اليوم على منصة سلمى سوفت.",
     xT: "عشر سنوات في الميدان.",
     xP: "عملت مع شركات ناشئة وعملاء من كبرى الشركات، وأدير اليوم منتجي الخاص. أطوّر الأعمال وأقود تنفيذها حتى تصل إلى بيئة الإنتاج.",
     now: "حاليًا",
     svcNote: "لست متأكدًا أي خدمة تناسبك؟ أخبرني عن مشروعك وسأقترح الأنسب.",
     svcBtn: "تواصل معي",
     cT: "لنبدأ مشروعك.",
-    allTile: "مشاريع أخرى وخبرة سابقة",
-    moreH: "مشاريع أخرى",
-    moreP: "أعمال سابقة مع شركات وفرق، مرّر على أي منها لمعاينته.",
+    moreH: "أعمال سابقة",
+    moreP: "مشاريع مع شركات وفرق عملت معها، مرّر على أي منها لمعاينته.",
     cBtn: "راسلني الآن",
     lWa: "واتساب",
     lWaV: "تحدّث معي مباشرة",
@@ -203,7 +206,11 @@ export const dict = {
       ],
     ],
     wT: "Selected work",
-    wP: "My own product SalmaSoft, stores running on it, and client work. All live — open any of them.",
+    wP: "My own product, platforms for clients, and stores running on SalmaSoft. All live, open any of them.",
+    gProjects: "Projects",
+    gProjectsP: "My own product, and platforms I built with client teams.",
+    gStores: "Online stores",
+    gStoresP: "Real stores selling today on the SalmaSoft platform.",
     xT: "Ten years shipping for real teams.",
     xP: "From startups and enterprise clients to running my own product, building and leading work that ships to production.",
     now: "Now",
@@ -211,8 +218,7 @@ export const dict = {
       "Not sure which one fits? Tell me about your project and I’ll suggest the right approach.",
     svcBtn: "Get in touch",
     cT: "Start a project.",
-    allTile: "More projects & past work",
-    moreH: "More projects",
+    moreH: "Past work",
     moreP:
       "Earlier work with companies and teams. Hover any of them for a preview.",
     cBtn: "Email me",
@@ -256,7 +262,9 @@ export type Featured = {
   image: string;
   name: Bi;
   type: Bi;
-  chip: Bi;
+  /** "projects": products and platforms; "stores": live stores running on SalmaSoft */
+  group: "projects" | "stores";
+  chip: Bi | null;
   founder: boolean;
 };
 export const featured: Featured[] = [
@@ -273,6 +281,7 @@ export const featured: Featured[] = [
       en: "Arabic store builder · my own product",
       ar: "منصة عربية لإنشاء المتاجر · منتجي الخاص",
     },
+    group: "projects",
     chip: {
       en: "Founder",
       ar: "المؤسس",
@@ -292,10 +301,8 @@ export const featured: Featured[] = [
       en: "Printing, packaging & uniforms",
       ar: "طباعة وتغليف وملابس موحّدة",
     },
-    chip: {
-      en: "On SalmaSoft",
-      ar: "على سلمى سوفت",
-    },
+    group: "stores",
+    chip: null,
     founder: false,
   },
   {
@@ -311,10 +318,8 @@ export const featured: Featured[] = [
       en: "Skincare",
       ar: "مستحضرات العناية بالبشرة",
     },
-    chip: {
-      en: "On SalmaSoft",
-      ar: "على سلمى سوفت",
-    },
+    group: "stores",
+    chip: null,
     founder: false,
   },
   {
@@ -330,10 +335,8 @@ export const featured: Featured[] = [
       en: "Handcrafted gifts",
       ar: "هدايا مصنوعة يدويًا",
     },
-    chip: {
-      en: "On SalmaSoft",
-      ar: "على سلمى سوفت",
-    },
+    group: "stores",
+    chip: null,
     founder: false,
   },
   {
@@ -349,6 +352,7 @@ export const featured: Featured[] = [
       en: "Home-made food marketplace · Frontend",
       ar: "سوق إلكتروني للطعام المنزلي · الواجهة الأمامية",
     },
+    group: "projects",
     chip: {
       en: "Client",
       ar: "عميل",
@@ -368,6 +372,7 @@ export const featured: Featured[] = [
       en: "Parking reservations · Full-stack on the team",
       ar: "حجز مواقف السيارات · مهندس متكامل ضمن الفريق",
     },
+    group: "projects",
     chip: {
       en: "Client",
       ar: "عميل",
