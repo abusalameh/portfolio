@@ -36,5 +36,6 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: cb3e4573c05676b32f1acc7fefcf79cb
+          wranglerVersion: "4.166.0"
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
           command: pages deploy out --project-name abusalameh --branch main --commit-hash ${{ github.sha }}
