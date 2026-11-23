@@ -1,7 +1,7 @@
 // app/providers.tsx
 "use client";
 
-import { useEffect, useState, type ReactNode } from "react";
+import { type ReactNode, useEffect, useState } from "react";
 
 export function PostHogProvider({ children }: { children: ReactNode }) {
   // Holds the lazily-loaded PostHog provider once analytics is initialized.

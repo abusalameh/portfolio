@@ -122,14 +122,54 @@
   },
   "skills": {
     "frontend": {
-      "vanillaFrontend": ["HTML", "CSS", "JavaScript", "TypeScript", "SCSS", "SASS"],
-      "cssFrameworks": ["TailwindCSS", "ShadCN UI", "Bootstrap", "Foundation", "Bulma", "Styled Components"],
-      "jsFrameworksAndLibraries": ["React.js", "Vue.js", "Next.js", "Nuxt.js", "Angular", "Zustand", "Redux", "Pinia", "Xstate", "Tanstack Query"],
+      "vanillaFrontend": [
+        "HTML",
+        "CSS",
+        "JavaScript",
+        "TypeScript",
+        "SCSS",
+        "SASS"
+      ],
+      "cssFrameworks": [
+        "TailwindCSS",
+        "ShadCN UI",
+        "Bootstrap",
+        "Foundation",
+        "Bulma",
+        "Styled Components"
+      ],
+      "jsFrameworksAndLibraries": [
+        "React.js",
+        "Vue.js",
+        "Next.js",
+        "Nuxt.js",
+        "Angular",
+        "Zustand",
+        "Redux",
+        "Pinia",
+        "Xstate",
+        "Tanstack Query"
+      ],
       "buildTools": ["Vite", "Gulp", "Grunt", "Webpack", "Encore"]
     },
     "backend": {
-      "vanillaBackend": ["PHP", "Node.js", "MySQL", "SQL Server", "PostgreSQL", "Supabase", "Redis"],
-      "backendFrameworks": ["Laravel", "Yii2", "Express", "PayloadCMS", "Drizzle ORM", "Prisma ORM"]
+      "vanillaBackend": [
+        "PHP",
+        "Node.js",
+        "MySQL",
+        "SQL Server",
+        "PostgreSQL",
+        "Supabase",
+        "Redis"
+      ],
+      "backendFrameworks": [
+        "Laravel",
+        "Yii2",
+        "Express",
+        "PayloadCMS",
+        "Drizzle ORM",
+        "Prisma ORM"
+      ]
     }
   },
   "projects": [
