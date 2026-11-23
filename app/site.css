@@ -1347,6 +1347,10 @@ a.lang:hover {
     filter 0.3s,
     opacity 0.3s;
 }
+.logos li img.wide {
+  width: 64px;
+  height: 27px;
+}
 .logos li:hover {
   color: var(--ink);
 }

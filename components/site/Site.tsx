@@ -148,7 +148,14 @@ export default function Site({ locale }: { locale: Locale }) {
             {logos.map((l) => (
               <li key={l.name}>
                 {/* biome-ignore lint/performance/noImgElement: static export */}
-                <img src={l.src} alt="" width={28} height={28} loading="lazy" />
+                <img
+                  src={l.src}
+                  alt=""
+                  className={"wide" in l && l.wide ? "wide" : undefined}
+                  width={28}
+                  height={28}
+                  loading="lazy"
+                />
                 <span className="ltr">{l.name}</span>
               </li>
             ))}

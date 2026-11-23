@@ -665,7 +665,8 @@ export const showcase: Slide[] = [
 export const logos = [
   {
     name: "SalmaSoft",
-    src: "/images/logos/salmasoft.png",
+    src: "/images/logos/salmasoft-mark.svg",
+    wide: true,
   },
   {
     name: "YallaBites",
