@@ -100,14 +100,11 @@ export default function Site({ locale }: { locale: Locale }) {
             <img
               className="avatar"
               src="/media/me-160.jpg"
-              alt={t.name}
+              alt=""
               width={40}
               height={40}
             />
-            <span className="avail">
-              <i aria-hidden="true" />
-              {t.avail}
-            </span>
+            <span className="who">{t.name}</span>
           </div>
           <Headline text={t.h1} />
           <p className="sub rv">{t.sub}</p>
