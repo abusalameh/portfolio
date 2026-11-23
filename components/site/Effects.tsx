@@ -65,7 +65,7 @@ export default function Effects() {
     const frame = () => {
       ticking = false;
       header?.classList.toggle("scrolled", window.scrollY > 10);
-      if (reduce || !deckOn) return;
+      if (reduce || !deckOn || window.innerWidth <= 900) return;
       const vh = window.innerHeight;
       const rects = cards.map((c) => c.getBoundingClientRect().top);
       cards.forEach((c, i) => {

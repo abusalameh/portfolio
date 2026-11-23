@@ -237,7 +237,11 @@ export default function Site({ locale }: { locale: Locale }) {
                     <div className="tl">{line}</div>
                   </div>
                   <div className="bot">
-                    <p>{body}</p>
+                    <ul className="incl">
+                      {body.map((b) => (
+                        <li key={b}>{b}</li>
+                      ))}
+                    </ul>
                     <div className="stack">
                       {stack.map((x) => (
                         <span className="ltr" key={x}>
@@ -249,6 +253,12 @@ export default function Site({ locale }: { locale: Locale }) {
                 </article>
               );
             })}
+          </div>
+          <div className="svc-end rv">
+            <p>{t.svcNote}</p>
+            <a className="btn mag" href="#contact">
+              {t.svcBtn}
+            </a>
           </div>
         </section>
 
