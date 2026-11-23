@@ -134,7 +134,7 @@ header.scrolled {
 
 /* Hero */
 .hero {
-  padding-block: clamp(48px, 8vh, 90px) 0;
+  padding-block: clamp(32px, 5.5vh, 64px) 0;
   text-align: center;
 }
 .role {
@@ -166,9 +166,9 @@ header.scrolled {
     0 0 0 4px rgba(255, 255, 255, 0.18);
 }
 h1 {
-  font: 900 clamp(56px, 9.6vw, 150px) / 1.14 var(--display);
+  font: 900 clamp(38px, 10.4vw, 112px) / 1.12 var(--display);
   letter-spacing: -0.01em;
-  margin-top: 8px;
+  margin-top: 10px;
 }
 :root[lang="en"] h1 {
   font-weight: 800;
@@ -216,7 +216,9 @@ h1 em {
   color: var(--red);
 }
 .sub {
-  margin-top: 22px;
+  margin-top: 18px;
+  max-width: 34em;
+  margin-inline: auto;
   font-size: clamp(17px, 1.5vw, 20px);
   color: var(--ink-2);
 }
@@ -239,12 +241,180 @@ h1 em {
   gap: 12px;
   justify-content: center;
   flex-wrap: wrap;
-  margin-top: 30px;
+  margin-top: 24px;
 }
 .ctas .btn {
   height: 54px;
   padding-inline: 30px;
   font-size: 16px;
+}
+
+/* avatar + availability */
+.hero-top {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 5px;
+  padding-inline-end: 16px;
+  border-radius: 999px;
+  background: var(--soft);
+}
+.hero-top .avatar {
+  width: 34px;
+  height: 34px;
+  box-shadow: none;
+}
+.avail {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--ink);
+}
+.avail i {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #1fa35c;
+  box-shadow: 0 0 0 0 rgba(31, 163, 92, 0.5);
+  animation: ping 2s infinite;
+}
+@keyframes ping {
+  70% {
+    box-shadow: 0 0 0 7px rgba(31, 163, 92, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(31, 163, 92, 0);
+  }
+}
+
+/* showcase stage: a soft panel so white sites never melt into the page */
+.stage {
+  margin-top: clamp(30px, 4.2vh, 46px);
+  background: var(--soft);
+  border-radius: 36px;
+  padding: 12px;
+}
+.stage .film {
+  margin-top: 0;
+  border-radius: 26px;
+}
+.film .visit {
+  position: absolute;
+  z-index: 2;
+  inset-inline-start: 18px;
+  bottom: 18px;
+  background: rgba(255, 255, 255, 0.96);
+  border-radius: 999px;
+  padding: 9px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  box-shadow: 0 8px 24px -12px rgba(0, 0, 0, 0.4);
+  transition:
+    background 0.25s,
+    color 0.25s;
+}
+.film .visit:hover {
+  background: var(--ink);
+  color: #fff;
+}
+.tabs {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 4px 2px;
+}
+.tablist {
+  display: flex;
+  gap: 6px;
+  flex: 1;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.tablist::-webkit-scrollbar {
+  display: none;
+}
+.tab {
+  all: unset;
+  position: relative;
+  flex: none;
+  cursor: pointer;
+  padding: 10px 18px;
+  border-radius: 999px;
+  font: 600 14px var(--body);
+  color: var(--ink-2);
+  overflow: hidden;
+  transition:
+    background 0.25s,
+    color 0.25s;
+}
+.tab:hover {
+  color: var(--ink);
+  background: rgba(255, 255, 255, 0.6);
+}
+.tab:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 2px;
+}
+.tab.on {
+  background: #fff;
+  color: var(--ink);
+  box-shadow: 0 4px 14px -8px rgba(0, 0, 0, 0.3);
+}
+.tab .bar {
+  position: absolute;
+  inset-inline: 14px;
+  bottom: 5px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--red);
+  transform-origin: left;
+  animation: fill 6.5s linear both;
+}
+:root[dir="rtl"] .tab .bar {
+  transform-origin: right;
+}
+.paused .tab .bar {
+  animation: none;
+  transform: scaleX(1);
+  opacity: 0.3;
+}
+@keyframes fill {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+.pp {
+  all: unset;
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #fff;
+  color: var(--ink);
+  cursor: pointer;
+  box-shadow: 0 4px 14px -8px rgba(0, 0, 0, 0.3);
+  transition:
+    background 0.25s,
+    color 0.25s;
+}
+.pp:hover {
+  background: var(--ink);
+  color: #fff;
+}
+.pp:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 2px;
+}
+.pp svg {
+  width: 16px;
+  height: 16px;
 }
 
 .film {
@@ -992,7 +1162,7 @@ a:hover .go svg {
   transition: none;
   animation: hero-in 0.6s var(--ease) 0.1s both;
 }
-.hero .film.rv {
+.hero .stage.rv {
   /* slide only, no fade: an element painted at opacity 0 never counts as the page's largest paint */
   animation: hero-rise 0.6s var(--ease) 0.1s both;
 }

@@ -32,7 +32,12 @@ export const dict = {
     ctaTop: "ابدأ مشروعك",
     role: "رجا أبو سلامة، مهندس برمجيات ومؤسس سلمى سوفت",
     h1: "أبني تطبيقات ويب *سريعة وموثوقة.*",
-    sub: "أكثر من عشر سنوات في تطوير الويب.",
+    sub: "مهندس برمجيات ومؤسس سلمى سوفت، بخبرة تزيد عن عشر سنوات في تطوير الويب.",
+    avail: "متاح للعمل الحر ولوظائف بدوام كامل",
+    name: "رجا أبو سلامة",
+    pause: "إيقاف العرض مؤقتًا",
+    play: "تشغيل العرض",
+    visit: "زُر الموقع",
     cta1: "شاهد أعمالي",
     cta2: "تحميل السيرة الذاتية",
     nums: [
@@ -118,7 +123,12 @@ export const dict = {
     ctaTop: "Start a project",
     role: "Raja Abu Salameh, founder and senior engineer",
     h1: "I build web apps that *perform.*",
-    sub: "10+ years building for the web.",
+    sub: "Software engineer and founder of SalmaSoft, with 10+ years building for the web.",
+    avail: "Available for freelance & full-time roles",
+    name: "Raja Abu Salameh",
+    pause: "Pause showcase",
+    play: "Play showcase",
+    visit: "Visit site",
     cta1: "View work",
     cta2: "Download CV",
     nums: [
@@ -550,6 +560,7 @@ export const experience: Job[] = [
 ];
 
 export type Slide = {
+  url: string;
   video?: string;
   poster?: string;
   image?: string;
@@ -565,6 +576,7 @@ export const showcase: Slide[] = [
       en: "SalmaSoft",
     },
     host: "salmasoft.com",
+    url: "https://salmasoft.com",
   },
   {
     video: "/media/doprint.mp4",
@@ -574,6 +586,7 @@ export const showcase: Slide[] = [
       en: "dO Print",
     },
     host: "doprint.ps",
+    url: "https://doprint.ps",
   },
   {
     video: "/media/rosaline.mp4",
@@ -583,6 +596,7 @@ export const showcase: Slide[] = [
       en: "RosaLine",
     },
     host: "rosaline.pro",
+    url: "https://rosaline.pro",
   },
   {
     video: "/media/yallabites.mp4",
@@ -592,6 +606,7 @@ export const showcase: Slide[] = [
       en: "YallaBites",
     },
     host: "yallabites.com",
+    url: "https://yallabites.com",
   },
   {
     image: "/media/one-stop-parking.jpg",
@@ -600,6 +615,7 @@ export const showcase: Slide[] = [
       en: "OneStopParking",
     },
     host: "onestopparking.com",
+    url: "https://onestopparking.com",
   },
 ];
 

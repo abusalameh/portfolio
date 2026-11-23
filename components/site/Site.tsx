@@ -46,10 +46,12 @@ function Headline({ text }: { text: string }) {
         return (
           // biome-ignore lint/suspicious/noArrayIndexKey: static word list
           <Fragment key={i}>
+            {/* the accented phrase always starts its own line */}
+            {w.startsWith("*") && i > 0 ? <br /> : null}
             <span className="w">
               <span>{accent ? <em>{clean}</em> : clean}</span>
             </span>
-            {i < words.length - 1 ? " " : null}
+            {i < words.length - 1 && !words[i + 1].startsWith("*") ? " " : null}
           </Fragment>
         );
       })}
@@ -93,17 +95,20 @@ export default function Site({ locale }: { locale: Locale }) {
 
       <main id="top">
         <section className="wrap hero">
-          <p className="role rv">
+          <div className="hero-top rv">
             {/* biome-ignore lint/performance/noImgElement: static export */}
             <img
               className="avatar"
               src="/media/me-160.jpg"
-              alt={locale === "ar" ? "صورة رجا أبو سلامة" : "Raja Abu Salameh"}
+              alt={t.name}
               width={40}
               height={40}
             />
-            <span>{t.role}</span>
-          </p>
+            <span className="avail">
+              <i aria-hidden="true" />
+              {t.avail}
+            </span>
+          </div>
           <Headline text={t.h1} />
           <p className="sub rv">{t.sub}</p>
           <div className="chips rv" dir="ltr">
@@ -120,7 +125,10 @@ export default function Site({ locale }: { locale: Locale }) {
               {t.cta2}
             </a>
           </div>
-          <Showcase locale={locale} />
+          <Showcase
+            locale={locale}
+            labels={{ pause: t.pause, play: t.play, visit: t.visit }}
+          />
         </section>
 
         <div className="wrap nums">
