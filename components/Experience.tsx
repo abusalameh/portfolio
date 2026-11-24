@@ -181,7 +181,7 @@ const Experience = () => {
 
         {/* Quick stats */}
         <motion.dl
-          className="mt-12 grid grid-cols-3 overflow-hidden rounded-2xl border border-border bg-card/40"
+          className="mt-12 grid grid-cols-3 overflow-hidden rounded-2xl border border-border bg-card shadow-[0_1px_2px_rgba(22,27,34,0.04),0_8px_24px_-12px_rgba(29,78,216,0.18)] dark:bg-card/40 dark:shadow-none"
           initial={reduce ? false : { opacity: 0, y: 24 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6, delay: 0.1 }}
