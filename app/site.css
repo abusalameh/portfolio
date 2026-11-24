@@ -804,23 +804,49 @@ a:hover .go svg {
   grid-template-columns: repeat(12, 1fr);
   grid-auto-rows: clamp(220px, 20vw, 290px);
   grid-auto-flow: dense;
-  gap: 28px 16px;
+  gap: 16px;
 }
+/* each project is a tinted card (its own brand colour, very light) with the screenshot inset,
+   so white screenshots never melt into the white page */
 .tile {
+  --tint: var(--soft);
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 4px;
   min-width: 0;
+  padding: 12px;
+  border-radius: 28px;
+  background: var(--tint);
   color: var(--ink);
+  transition: background-color 0.3s;
 }
 .tile .media {
   position: relative;
   flex: 1;
   min-height: 0;
-  border-radius: 28px;
+  border-radius: 16px;
   overflow: hidden;
-  background: var(--soft);
+  background: #fff;
   isolation: isolate;
+  box-shadow: 0 0 0 1px rgba(10, 10, 14, 0.06);
+}
+.t-salma {
+  --tint: #ece9fd;
+}
+.t-yalla {
+  --tint: #fdeceb;
+}
+.t-osp {
+  --tint: #e6edf7;
+}
+.t-do {
+  --tint: #f0e7fd;
+}
+.t-rosa {
+  --tint: #f6ece6;
+}
+.t-uq {
+  --tint: #e7efe2;
 }
 .tile img {
   position: absolute;
@@ -837,21 +863,21 @@ a:hover .go svg {
 .tile .go {
   position: absolute;
   z-index: 2;
-  inset-block-start: 16px;
-  inset-inline-end: 16px;
+  inset-block-start: 14px;
+  inset-inline-end: 14px;
 }
 .tile .chip {
   box-shadow: 0 4px 14px -4px rgba(10, 10, 14, 0.28);
   position: absolute;
   z-index: 2;
-  inset-block-start: 20px;
-  inset-inline-start: 20px;
+  inset-block-start: 16px;
+  inset-inline-start: 16px;
 }
 .tile .meta {
   display: flex;
   flex-direction: column;
   gap: 2px;
-  padding-inline: 6px;
+  padding: 10px 10px 6px;
 }
 .tile .meta b {
   font: 800 clamp(19px, 1.6vw, 24px) / 1.25 var(--display);
@@ -961,15 +987,20 @@ a:hover .go svg {
   .bento {
     grid-template-columns: 1fr;
     grid-auto-rows: auto;
-    gap: 30px;
+    gap: 14px;
   }
   .bento .tile {
     grid-column: auto;
     grid-row: auto;
   }
+  .tile {
+    padding: 10px;
+    border-radius: 24px;
+  }
   .tile .media {
     flex: none;
     aspect-ratio: 4 / 3;
+    border-radius: 14px;
   }
   .grp-h {
     flex-direction: column;
